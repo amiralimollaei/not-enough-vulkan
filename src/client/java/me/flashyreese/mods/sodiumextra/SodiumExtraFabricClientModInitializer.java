@@ -31,7 +31,8 @@ public class SodiumExtraFabricClientModInitializer implements ClientModInitializ
         modifiedProfiles.put(DebugScreenProfile.DEFAULT, Map.copyOf(defaultProfile));
         modifiedProfiles.put(DebugScreenProfile.PERFORMANCE, Map.copyOf(performanceProfile));
 
-        DebugScreenEntries.PROFILES = Collections.unmodifiableMap(modifiedProfiles);
+        // TODO: we need class weakeners, for now just skip this
+        // DebugScreenEntries.PROFILES = Collections.unmodifiableMap(modifiedProfiles);
     }
 
     @Override

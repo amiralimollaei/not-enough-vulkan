@@ -53,25 +53,20 @@ loom {
 dependencies {
     // To change the versions see the gradle.properties file
     minecraft "com.mojang:minecraft:${project.minecraft_version}"
-    mappings loom.layered {
-        officialMojangMappings()
-        if (project.hasProperty('parchment_version') && project.parchment_version) {
-            parchment "org.parchmentmc.data:parchment-${minecraft_version}:${project.parchment_version}@zip"
-        }
-    }
-    modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
+
+    implementation "net.fabricmc:fabric-loader:${project.loader_version}"
 
     include(implementation(annotationProcessor("com.github.bawnorton.mixinsquared:mixinsquared-fabric:0.3.7-beta.1")))
 
     // Fabric API. This is technically optional, but you probably want it anyway.
-    modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+    implementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
     // Mod Menu
-    // modImplementation "com.terraformersmc:modmenu:${project.modmenu_version}"
-    // VulkanMod, for some reason modImplementation makes the client not launch
-    modImplementation "maven.modrinth:vulkanmod:${project.vulkanmod_version}"
-    //modCompileOnly files("libs/VulkanMod_26.1.2-0.6.3.jar")
+    // implementation "com.terraformersmc:modmenu:${project.modmenu_version}"
+    // VulkanMod, for some reason implementation makes the client not launch
+    implementation "maven.modrinth:vulkanmod:${project.vulkanmod_version}"
+    //compileOnly files("libs/VulkanMod_26.1.2-0.6.3.jar")
     // Bobby compatibility
-    modCompileOnly "maven.modrinth:bobby:${project.bobby_version}"
+    compileOnly "maven.modrinth:bobby:${project.bobby_version}"
 }
 
 processResources {

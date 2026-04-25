@@ -71,7 +71,7 @@ dependencies {
     modImplementation "maven.modrinth:vulkanmod:${project.vulkanmod_version}"
     //modCompileOnly files("libs/VulkanMod_26.1.2-0.6.3.jar")
     // Bobby compatibility
-    modCompileOnly "maven.modrinth:bobby:${project.bobby_version}"
+    // modCompileOnly "maven.modrinth:bobby:${project.bobby_version}"
 }
 
 processResources {

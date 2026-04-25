@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "not-enough-vulkan",
-  "version": "1.4.0",
+  "version": "1.4.1",
   "name": "Not Enough Vulkan",
   "description": "Features that shouldn't be in VulkanMod, a fork of Sodium Extra",
   "authors": [
@@ -62,8 +62,8 @@
   ],
   "depends": {
     "fabricloader": ">=0.18",
-    "vulkanmod": ">=0.5.7",
-    "minecraft": ">=1.21.11"
+    "vulkanmod": ">=0.6.3",
+    "minecraft": ">=26.1"
   },
   "breaks": {
     "sodium": ">0.0.0"

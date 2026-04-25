@@ -1,14 +1,21 @@
 package me.flashyreese.mods.sodiumextra.client;
 
 import me.flashyreese.mods.sodiumextra.client.config.SodiumExtraGameOptions;
+import me.flashyreese.mods.sodiumextra.client.gui.SodiumExtraDebugEntryCoords;
+import me.flashyreese.mods.sodiumextra.client.gui.SodiumExtraDebugEntryFps;
+import me.flashyreese.mods.sodiumextra.client.gui.SodiumExtraDebugEntryLightUpdates;
 import me.flashyreese.mods.sodiumextra.client.gui.SodiumExtraHud;
 import net.caffeinemc.caffeineconfig.CaffeineConfig;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.components.debug.DebugScreenEntry;
+import net.minecraft.resources.Identifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.function.BiConsumer;
 
 public class SodiumExtraClientMod {
     private static SodiumExtraGameOptions CONFIG;
@@ -35,17 +42,23 @@ public class SodiumExtraClientMod {
     public static CaffeineConfig mixinConfig() {
         if (MIXIN_CONFIG == null) {
             MIXIN_CONFIG = CaffeineConfig.builder("Sodium Extra").withSettingsKey("sodium-extra:options")
+                    .addMixinOption("core", true, false)
+
+                    .addMixinOption("adaptive_sync", true)
                     .addMixinOption("animation", true)
                     .addMixinOption("biome_colors", true)
                     .addMixinOption("cloud", true)
+                    .addMixinOption("compat", true, false)
                     .addMixinOption("fog", true)
                     .addMixinOption("fps", true)
                     .addMixinOption("gui", true)
                     .addMixinOption("instant_sneak", true)
                     .addMixinOption("light_updates", true)
+                    .addMixinOption("optimizations", true)
+                    .addMixinOption("optimizations.beacon_beam_rendering", true)
                     .addMixinOption("particle", true)
                     .addMixinOption("prevent_shaders", true)
-                    .addMixinOption("reduce_resolution_on_mac", false, false)
+                    .addMixinOption("reduce_resolution_on_mac", true)
                     .addMixinOption("render", true)
                     .addMixinOption("render.block", true)
                     .addMixinOption("render.block.entity", true)
@@ -75,10 +88,22 @@ public class SodiumExtraClientMod {
         hud.onStartTick(client);
     }
 
-    public static void onHudRender(GuiGraphics guiGraphics, DeltaTracker deltaTracker) {
+    public static void onHudRender(GuiGraphicsExtractor guiGraphics, DeltaTracker deltaTracker) {
         if (hud == null) {
             hud = new SodiumExtraHud();
         }
         hud.onHudRender(guiGraphics, deltaTracker);
+    }
+
+    public static void registerAll(BiConsumer<Identifier, DebugScreenEntry> register) {
+        Identifier fps = Identifier.fromNamespaceAndPath("sodium-extra", "sodium-extra.option.show_fps");
+        Identifier coordinates = Identifier.fromNamespaceAndPath("sodium-extra", "sodium-extra.option.show_coordinates");
+        Identifier fpsExtended = Identifier.fromNamespaceAndPath("sodium-extra", "sodium-extra.option.show_fps_extended");
+        Identifier lightUpdatesWarning = Identifier.fromNamespaceAndPath("sodium-extra", "sodium-extra.option.light_updates_warning");
+
+        register.accept(fps, new SodiumExtraDebugEntryFps(false));
+        register.accept(coordinates, new SodiumExtraDebugEntryCoords());
+        register.accept(fpsExtended, new SodiumExtraDebugEntryFps(true));
+        register.accept(lightUpdatesWarning, new SodiumExtraDebugEntryLightUpdates());
     }
 }

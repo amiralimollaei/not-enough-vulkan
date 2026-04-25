@@ -6,7 +6,7 @@ import me.flashyreese.mods.sodiumextra.client.SodiumExtraClientMod;
 import me.flashyreese.mods.sodiumextra.client.config.SodiumExtraGameOptions;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.phys.Vec3;
 
@@ -21,7 +21,6 @@ public class SodiumExtraHud {
     private final FrameCounter stats = FrameCounter.getInstance();
 
     public void onStartTick(Minecraft client) {
-        // Clear the textList to start fresh (this might not be ideal but hey it's still better than whatever the fuck debug hud is doing)
         this.textList.clear();
         if (SodiumExtraClientMod.options().extraSettings.showFps) {
             int currentFPS = FrameCounter.getInstance().getSmoothFps();
@@ -45,14 +44,9 @@ public class SodiumExtraHud {
 
             this.textList.add(text);
         }
-
-        if (!SodiumExtraClientMod.options().renderSettings.lightUpdates) {
-            Component text = Component.translatable("sodium-extra.overlay.light_updates");
-            this.textList.add(text);
-        }
     }
 
-    public void onHudRender(GuiGraphics guiGraphics, DeltaTracker deltaTracker) {
+    public void onHudRender(GuiGraphicsExtractor guiGraphics, DeltaTracker deltaTracker) {
         if (!this.client.debugEntries.isOverlayVisible() && !this.client.options.hideGui) {
             SodiumExtraGameOptions.OverlayCorner overlayCorner = SodiumExtraClientMod.options().extraSettings.overlayCorner;
             // Calculate starting position based on the overlay corner
@@ -76,13 +70,13 @@ public class SodiumExtraHud {
         }
     }
 
-    private void drawString(GuiGraphics guiGraphics, Component text, int x, int y) {
+    private void drawString(GuiGraphicsExtractor guiGraphics, Component text, int x, int y) {
         int textColor = 0xffffffff; // Default text color
 
         if (SodiumExtraClientMod.options().extraSettings.textContrast == SodiumExtraGameOptions.TextContrast.BACKGROUND) {
             guiGraphics.fill(x - 1, y - 1, x + this.client.font.width(text) + 1, y + this.client.font.lineHeight + 1, -1873784752);
         }
 
-        guiGraphics.drawString(this.client.font, text, x, y, textColor, SodiumExtraClientMod.options().extraSettings.textContrast == SodiumExtraGameOptions.TextContrast.SHADOW);
+        guiGraphics.text(this.client.font, text, x, y, textColor, SodiumExtraClientMod.options().extraSettings.textContrast == SodiumExtraGameOptions.TextContrast.SHADOW);
     }
 }

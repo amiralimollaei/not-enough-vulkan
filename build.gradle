@@ -47,6 +47,13 @@ loom {
         }
     }
 
+    mixin {
+        useLegacyMixinAp = false
+        //defaultRefmapName = "sodium-extra.refmap.json"
+    }
+
+    accessWidenerPath = file("src/client/resources/sodium-extra.accesswidener")
+
 }
 
 

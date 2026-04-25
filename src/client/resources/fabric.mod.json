@@ -36,7 +36,8 @@
   "environment": "client",
   "entrypoints": {
     "client": [
-      "io.github.amiralimollaei.mods.notenoughvulkan.NotEnoughVulkanModInitializer"
+      "io.github.amiralimollaei.mods.notenoughvulkan.NotEnoughVulkanModInitializer",
+      "me.flashyreese.mods.sodiumextra.SodiumExtraFabricClientModInitializer"
     ]
   },
   "custom": {

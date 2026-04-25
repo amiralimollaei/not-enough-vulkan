@@ -33,7 +33,7 @@ jobs:
         with:
           modrinth-id: 'iuZL1bXB' # Replace with the Modrinth project slug or Identifier (ID)
           modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
-          files: 'build/libs/!(*-dev|-sources).jar' # Adjust path if your build output differs
+          files: 'build/libs/!(*-@(dev|sources|javadoc)).jar'
           name: ${{ github.event.release.name }}
           version: ${{ github.event.release.tag_name }}
           version-type: release

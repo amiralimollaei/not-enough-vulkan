@@ -1,17 +1,18 @@
 package io.github.amiralimollaei.mods.notenoughvulkan.mixin.compat.monitor_selector;
 
-import com.llamalad7.mixinextras.lib.apache.commons.ArrayUtils;
 import io.github.amiralimollaei.mods.notenoughvulkan.compat.monitor_selector.FullscreenMonitorManager;
 import net.minecraft.network.chat.Component;
-import net.vulkanmod.config.Config;
 import net.vulkanmod.config.option.CyclingOption;
 import net.vulkanmod.config.option.Option;
 import net.vulkanmod.config.option.Options;
 import net.vulkanmod.config.video.VideoModeManager;
 import net.vulkanmod.config.video.VideoModeSet;
 import net.vulkanmod.config.video.WindowMode;
+import org.apache.commons.lang3.ArrayUtils;
+import org.jspecify.annotations.NonNull;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.*;
 
 import static org.lwjgl.glfw.GLFW.glfwGetMonitorName;
@@ -19,15 +20,12 @@ import static org.lwjgl.glfw.GLFW.glfwGetMonitorName;
 @Mixin(value = Options.class, remap = false)
 public class OptionsMixin {
     @Shadow
-    static net.minecraft.client.Options minecraftOptions;
+    public static net.minecraft.client.Options mcOptions;
 
     @Shadow
     public static boolean fullscreenDirty;
 
-    @Shadow
-    private static Config config;
-
-    /*/// modified from [pull #618](https://github.com/xCollateral/VulkanMod/pull/618)
+    /// modified from [pull #618](https://github.com/xCollateral/VulkanMod/pull/618)
     @ModifyArg(
             method = "getVideoOpts",
             at = @At(
@@ -39,38 +37,50 @@ public class OptionsMixin {
     private static Option<?>[] notenoughvuklan$addExtraVideoOpts(Option<?>[] options) {
         if (!FullscreenMonitorManager.shouldApplyMonitorSelectorPatch()) return options;
 
-        CyclingOption<VideoModeSet> resolutionOption = (CyclingOption<VideoModeSet>) options[0];
+        return insertMonitorSelectorOption(options);
+    }
+
+    @Unique
+    private static Option<?> @NonNull [] insertMonitorSelectorOption(Option<?>[] options) {
         CyclingOption<Long> monitorOption = new CyclingOption<Long>(
                 Component.translatable("not-enough-vulkan.option.monitor_selector"),
                 FullscreenMonitorManager.getMonitors(),
                 (monitorHandle) -> {
                     FullscreenMonitorManager.setSelectedFullscreenMonitor(monitorHandle);
                     FullscreenMonitorManager.applySelectedFullscreenMonitor();
-                    // re-initialize VideoModeManager with the new monitor selected
-                    VideoModeManager.init();
-                    VideoModeManager.applySelectedVideoMode();
 
-                    if (minecraftOptions.fullscreen().get()) fullscreenDirty = true;
+                    if (mcOptions.fullscreen().get()) fullscreenDirty = true;
                 },
-                FullscreenMonitorManager::getSelectedFullscreenMonitor
+                () -> {
+                    long monitor = FullscreenMonitorManager.getSelectedFullscreenMonitor();
+                    if (monitor == -1) {
+                        monitor = VideoModeManager.selectedMonitor;
+                    }
+                    return monitor;
+                }
         );
-        monitorOption.setTooltip(Component.translatable("not-enough-vulkan.option.monitor_selector.tooltip"));
+        monitorOption.setTooltip((v) -> Component.translatable("not-enough-vulkan.option.monitor_selector.tooltip"));
         monitorOption.setTranslator(monitor_address -> Component.nullToEmpty(glfwGetMonitorName(monitor_address)));
-        monitorOption.setNewValue(FullscreenMonitorManager.getSelectedFullscreenMonitor());
+        monitorOption.setNewValue(VideoModeManager.selectedMonitor);
+
+        // update resolution Option when the screen changes
+        CyclingOption<VideoModeSet> resolutionOption = (CyclingOption<VideoModeSet>) options[1];
+        CyclingOption<Integer> refreshRateOption = (CyclingOption<Integer>) options[2];
         monitorOption.setOnChange(() -> {
-            var newVideoResolutions = VideoModeManager.populateVideoResolutions(monitorOption.getNewValue());
+            var newVideoResolutions = VideoModeManager.monitorToVideoModeSets.get(monitorOption.getNewValue());
             resolutionOption.setValues(newVideoResolutions);
             resolutionOption.setNewValue(newVideoResolutions != null ? newVideoResolutions[newVideoResolutions.length - 1] : VideoModeSet.getDummy());
         });
         // monitorOption should only be active when window mode is fullscreen
-        CyclingOption<WindowMode> windowModeOption = (CyclingOption<WindowMode>) options[2];
+        CyclingOption<WindowMode> windowModeOption = (CyclingOption<WindowMode>) options[0];
         monitorOption.setActivationFn(() -> windowModeOption.getNewValue() == WindowMode.EXCLUSIVE_FULLSCREEN);
         windowModeOption.setOnChange(() -> {
-            monitorOption.setActive(windowModeOption.getNewValue() == WindowMode.EXCLUSIVE_FULLSCREEN);
+            resolutionOption.updateActiveState();
+            refreshRateOption.updateActiveState();
+            monitorOption.updateActiveState();
             // reset monitorOption when disabled
-            if (windowModeOption.getNewValue() != WindowMode.EXCLUSIVE_FULLSCREEN)
-                monitorOption.setNewValue(((OptionAccessor<Long>) monitorOption).getValue());
+            if (windowModeOption.getNewValue() != WindowMode.EXCLUSIVE_FULLSCREEN) monitorOption.resetValue();
         });
-        return ArrayUtils.add(options, 0, monitorOption);
-    }*/
+        return ArrayUtils.add(options, 1, monitorOption);
+    }
 }

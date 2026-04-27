@@ -1,4 +1,4 @@
-package io.github.amiralimollaei.mods.notenoughvulkan.mixin.core;
+package io.github.amiralimollaei.mods.notenoughvulkan.mixin.compat.monitor_selector;
 
 import io.github.amiralimollaei.mods.notenoughvulkan.NotEnoughVulkanClientMod;
 import net.vulkanmod.Initializer;

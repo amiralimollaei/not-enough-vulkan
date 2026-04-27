@@ -3,8 +3,8 @@ package io.github.amiralimollaei.mods.notenoughvulkan;
 import io.github.amiralimollaei.mods.notenoughvulkan.config.NotEnoughVulkanGameOptions;
 import net.caffeinemc.caffeineconfig.CaffeineConfig;
 import net.fabricmc.loader.api.FabricLoader;
+import net.vulkanmod.Initializer;
 import net.vulkanmod.config.Config;
-import net.vulkanmod.config.Platform;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -13,7 +13,6 @@ import java.util.Arrays;
 
 public class NotEnoughVulkanClientMod {
     private static NotEnoughVulkanGameOptions CONFIG;
-    private static Config VKCONFIG;
     private static CaffeineConfig MIXIN_CONFIG;
     private static Logger LOGGER;
 
@@ -47,9 +46,9 @@ public class NotEnoughVulkanClientMod {
                     .addMixinOption("core", true, false)
                     .addMixinOption("core.compact_vk_options", false)
                     .addMixinOption("compat", true)
-                    .addMixinOption("compat.bobby", packageExists("de.johni0702.minecraft.bobby"), false)
+                    .addMixinOption("compat.bobby", packageExists("de.johni0702.minecraft.bobby"))
                     .addMixinOption("compat.skip_wayland_patches", true)
-                    .addMixinOption("compat.monitor_selector", false)
+                    .addMixinOption("compat.monitor_selector", true)
                     .addMixinOption("compat.force_x11", true)
 
                     //.withInfoUrl("https://github.com/amiralimollaei/not-enough-vulkan/wiki/Configuration-File")
@@ -58,21 +57,15 @@ public class NotEnoughVulkanClientMod {
         return MIXIN_CONFIG;
     }
 
-    public static Config loadVulkanModConfig(Path path) {
-        Config config = Config.load(path);
-        if (config == null) {
-            config = new Config();
-            config.write();
-        }
-
-        return config;
-    }
-
     public static Config getVulkanModConfig() {
-        if (VKCONFIG == null) {
-            Path configPath = FabricLoader.getInstance().getConfigDir().resolve("vulkanmod_settings.json");
-            VKCONFIG = loadVulkanModConfig(configPath);
+        if (Initializer.CONFIG == null) {
+            Path configPath = FabricLoader.getInstance()
+                    .getConfigDir()
+                    .resolve("vulkanmod_settings.json");
+
+            Initializer.CONFIG = Config.load(configPath);
         }
-        return VKCONFIG;
+
+        return Initializer.CONFIG;
     }
 }

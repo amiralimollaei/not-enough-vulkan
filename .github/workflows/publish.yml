@@ -36,7 +36,7 @@ jobs:
           files: 'build/libs/!(*-@(dev|sources|javadoc)).jar'
           name: ${{ github.event.release.name }}
           version: ${{ github.event.release.tag_name }}
-          version-type: release
+          version-type: beta
           changelog: ${{ github.event.release.body }}
           loaders: fabric # e.g., fabric, forge, neoforge
           # Replace with the supported Minecraft versions

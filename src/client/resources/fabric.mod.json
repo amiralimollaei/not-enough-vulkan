@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "not-enough-vulkan",
-  "version": "1.4.2",
+  "version": "1.5.0-SNAPSHOT",
   "name": "Not Enough Vulkan",
   "description": "Features that shouldn't be in VulkanMod, a fork of Sodium Extra",
   "authors": [

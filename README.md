@@ -24,9 +24,17 @@
 
 ---
 
+### Download Links
+
+<p style="text-align: center;">
+    <a href="https://modrinth.com/mod/not-enough-vulkan/versions"><img src="https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/available/modrinth_vector.svg" alt="Modrinth" style="margin: 5px 5px;"></a>
+</p>
+
+---
+
 ## Building from source
 ### Prerequisites
-- Java Development Kit 17 or above
+- Java Development Kit 25 or above
 - Git
 ### Compiling
 1. Clone the repository and navigate into the cloned repository.

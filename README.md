@@ -9,20 +9,14 @@
     <a href="https://modrinth.com/mod/not-enough-vulkan/versions"><img src="https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/available/modrinth_vector.svg" alt="Modrinth" style="margin: 5px 5px;"></a>
 </p>
 
-> [!NOTE]
-> > **Development Update & Technical Notes (As of April 25th)**
->
-> I apologize for the substantial delay (57+ days) in releasing updates. Since March 2026, I have been without stable internet access in Iran, which unfortunately resulted in a loss of my local development toolchains, as well as access to the latest information about minecraft updates.
->
-> I am now working on the Minecraft 26.1 updates by leveraging GitHub Action Runners for compilation. Progress is slower than ideal due to the necessary reliance on external runners.
->
-> To contact me, please use [GitHub Discussions](https://github.com/amiralimollaei/not-enough-vulkan/discussions) if my GitHub connection holds, otherwise, contact via Gmail.
->
-> Please feel free to fork my mods and update them yourselves!
+> [!IMPORTANT]
+> Please read the notes on my [profile](https://github.com/amiralimollaei) regarding my absence in the past 2 months.
 
 ---
 
-> Features that shouldn't be in VulkanMod, a fork of Sodium Extra and alternative to VulkanMod Extra, that aims to stay up to date with the latest updates and have fewer bugs.
+> Features that shouldn't be in VulkanMod
+
+a fork of Sodium Extra and alternative to VulkanMod Extra, that aims to stay up to date with the latest updates and have fewer bugs.
 
 ![Screenshot](assets/2026-04-25_14.34.07.png)
 

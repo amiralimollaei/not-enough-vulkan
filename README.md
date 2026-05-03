@@ -1,4 +1,8 @@
-# Not Enough Vulkan
+<h1 align="left">
+<img src="src/client/resources/assets/not-enough-vulkan/textures/icon.png" width="50" align="left" />
+  Not Enough Vulkan
+</h1>
+
 ![Java 25](https://img.shields.io/badge/language-Java%2025-9b599a.svg?style=flat-square)
 [![Project License](https://img.shields.io/github/license/amiralimollaei/not-enough-vulkan?style=flat-square)](LICENSE.txt)
 ![Environment: Client](https://img.shields.io/badge/environment-client-1976d2?style=flat-square)

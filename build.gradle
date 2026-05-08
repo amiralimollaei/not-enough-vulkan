@@ -62,9 +62,8 @@ dependencies {
 
     // Fabric API. This is technically optional, but you probably want it anyway.
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
-    // Mod Menu
-    // modImplementation "com.terraformersmc:modmenu:${project.modmenu_version}"
-    // VulkanMod, for some reason modImplementation makes the client not launch
+    // VulkanMod
+    // Note: for some reason modImplementation creates a crash on runClient, use modCompileOnly for development
     modImplementation "maven.modrinth:vulkanmod:${project.vulkanmod_version}"
     // Bobby compatibility
     modImplementation "maven.modrinth:bobby:${project.bobby_version}"

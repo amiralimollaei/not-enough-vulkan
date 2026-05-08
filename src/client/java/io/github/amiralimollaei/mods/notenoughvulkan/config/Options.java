@@ -92,20 +92,20 @@ public abstract class Options {
                                 () -> sodiumExtraOptions.animationSettings.water)
                                 .setTooltip((v) -> Component.translatable("sodium-extra.option.animate_water.tooltip")),
                         new SwitchOption(parseVanillaString("block.minecraft.lava"),
-                                value -> sodiumExtraOptions.animationSettings.animation = value,
+                                value -> sodiumExtraOptions.animationSettings.lava = value,
                                 () -> sodiumExtraOptions.animationSettings.lava)
                                 .setTooltip((v) -> Component.translatable("sodium-extra.option.animate_lava.tooltip")),
                         new SwitchOption(parseVanillaString("block.minecraft.fire"),
-                                value -> sodiumExtraOptions.animationSettings.animation = value,
+                                value -> sodiumExtraOptions.animationSettings.fire = value,
                                 () -> sodiumExtraOptions.animationSettings.fire)
                                 .setTooltip((v) -> Component.translatable("sodium-extra.option.animate_fire.tooltip")),
                         new SwitchOption(parseVanillaString("block.minecraft.nether_portal"),
-                                value -> sodiumExtraOptions.animationSettings.animation = value,
+                                value -> sodiumExtraOptions.animationSettings.portal = value,
                                 () -> sodiumExtraOptions.animationSettings.portal)
                                 .setTooltip((v) -> Component.translatable("sodium-extra.option.animate_portal.tooltip")),
                         new SwitchOption(parseVanillaString("sodium-extra.option.block_animations"),
                                 value -> sodiumExtraOptions.animationSettings.blockAnimations = value,
-                                () -> sodiumExtraOptions.animationSettings.portal)
+                                () -> sodiumExtraOptions.animationSettings.blockAnimations)
                                 .setTooltip((v) -> Component.translatable("sodium-extra.option.block_animations.tooltip")),
                         new SwitchOption(parseVanillaString("block.minecraft.sculk_sensor"),
                                 value -> sodiumExtraOptions.animationSettings.sculkSensor = value,

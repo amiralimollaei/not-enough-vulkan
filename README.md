@@ -26,7 +26,7 @@
 
 ## Building from source
 ### Prerequisites
-- Java Development Kit 17 or above
+- Java Development Kit 21 or above
 - Git
 ### Compiling
 1. Clone the repository and navigate into the cloned repository.

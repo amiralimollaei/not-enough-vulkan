@@ -7,7 +7,7 @@ on:
 
 jobs:
   publish:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - name: checkout repository
         uses: actions/checkout@v4
@@ -36,7 +36,7 @@ jobs:
           files: 'build/libs/!(*-@(dev|sources|javadoc)).jar'
           name: ${{ github.event.release.name }}
           version: ${{ github.event.release.tag_name }}
-          version-type: beta
+          version-type: release
           changelog: ${{ github.event.release.body }}
           loaders: fabric # e.g., fabric, forge, neoforge
           # Replace with the supported Minecraft versions

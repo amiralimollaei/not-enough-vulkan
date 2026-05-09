@@ -7,12 +7,12 @@ body:
     attributes:
       label: Make sure you are not opening a duplicate.
       options:
-        - label: "[I have searched the issue tracker](https://github.com/FlashyReese/not-enough-vulkan-fabric/issues?q=) and did not find an issue describing my bug."
+        - label: "[I have searched the issue tracker](https://github.com/amiralimollaei/not-enough-vulkan/issues?q=) and did not find an issue describing my bug."
     validations:
       required: true
   - type: markdown
     attributes:
-      value: "Are you using the latest version of the mod? If not, try updating to see if it resolves your issue. You can [find the latest versions here](https://github.com/FlashyReese/not-enough-vulkan-fabric/releases)."
+      value: "Are you using the latest version of the mod? If not, try updating to see if it resolves your issue. You can [find the latest versions here](https://github.com/amiralimollaei/not-enough-vulkan/releases)."
   - type: input
     id: version-mc
     attributes:
@@ -23,15 +23,15 @@ body:
   - type: input
     id: version-not-enough-vulkan
     attributes:
-      label: Vulkan Extra version.
-      placeholder: ex. 0.3.2
+      label: Not Enough Vulkan version.
+      placeholder: ex. 1.3.2
     validations:
       required: true
   - type: input
-    id: version-sodium
+    id: version-vulkanmod
     attributes:
-      label: Sodium version.
-      placeholder: ex. 0.2.0
+      label: VulkanMod version.
+      placeholder: ex. 0.5.6
     validations:
       required: true
   - type: textarea

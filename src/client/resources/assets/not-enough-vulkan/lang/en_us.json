@@ -377,6 +377,7 @@
   "sodium-extra.overlay.fps_extended": "(avg. %s / 1%% low %s / 0.1%% low %s)",
   "sodium-extra.overlay.light_updates": "Light updates disabled",
   "sodium-extra.units.ticks": "%s tick(s)",
+  "not-enough-vulkan.option.deprecated": " (Deprecated)",
   "not-enough-vulkan.option.skip_wayland_patches": "Skip Wayland Patches",
   "not-enough-vulkan.option.skip_wayland_patches.tooltip": "Skips wayland compatibility patches on linux to enable custom GLFW workarounds (only available when using wayland), Some effects require a restart.",
   "not-enough-vulkan.option.monitor_selector": "Fullscreen Monitor",

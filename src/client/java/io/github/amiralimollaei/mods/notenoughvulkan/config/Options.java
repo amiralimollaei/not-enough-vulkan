@@ -438,14 +438,11 @@ public abstract class Options {
         );
 
         SwitchOption forceX11;
-        if (NotEnoughVulkanClientMod.isVulkanModOlderThan("0.6.6")) {
+        if (NotEnoughVulkanClientMod.mixinConfig().getOptions().get("mixin.compat.force_x11").isEnabled()) {
             forceX11 = new SwitchOption(
                     Component.translatable("not-enough-vulkan.option.force_x11"),
                     (value) -> notEnoughVulkanOptions.compatSettings.forceX11 = value,
                     () -> notEnoughVulkanOptions.compatSettings.forceX11
-            );
-            forceX11.setActivationFn(
-                    () -> NotEnoughVulkanClientMod.mixinConfig().getOptions().get("mixin.compat.force_x11").isEnabled() && supportsWayland()
             );
         } else {
             notEnoughVulkanOptions.compatSettings.forceX11 = false;
@@ -456,9 +453,11 @@ public abstract class Options {
                     (value) -> notEnoughVulkanOptions.compatSettings.forceX11 = value,
                     () -> notEnoughVulkanOptions.compatSettings.forceX11
             );
-            forceX11.setActivationFn(() -> false);
         }
         forceX11.setTooltip((v) -> Component.translatable("not-enough-vulkan.option.force_x11.tooltip"));
+        forceX11.setActivationFn(
+                () -> NotEnoughVulkanClientMod.mixinConfig().getOptions().get("mixin.compat.force_x11").isEnabled() && supportsWayland()
+        );
         return new OptionBlock[]{
                 new OptionBlock("Compatibility", new Option[]{
                         reduceResolutionOnMac, skipWaylandPatches, forceX11

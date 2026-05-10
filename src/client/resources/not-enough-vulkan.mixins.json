@@ -8,7 +8,6 @@
   "client": [
     "compat.bobby.FakeChunkManagerMixin",
     "compat.bobby.OptionsMixin",
-    "compat.force_x11.InitializerMixin",
     "compat.monitor_selector.OptionsMixin",
     "compat.monitor_selector.VideoModeManagerMixin",
     "compat.monitor_selector.InitializerMixin",

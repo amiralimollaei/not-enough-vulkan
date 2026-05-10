@@ -1,7 +1,6 @@
 package io.github.amiralimollaei.mods.notenoughvulkan.config;
 
 import io.github.amiralimollaei.mods.notenoughvulkan.NotEnoughVulkanClientMod;
-import io.github.amiralimollaei.mods.notenoughvulkan.compat.force_x11.ExtendedPlatform;
 import me.flashyreese.mods.sodiumextra.client.SodiumExtraClientMod;
 import me.flashyreese.mods.sodiumextra.client.config.FogTypeConfig;
 import me.flashyreese.mods.sodiumextra.client.config.SodiumExtraGameOptions;
@@ -404,20 +403,11 @@ public abstract class Options {
         );
         skipWaylandPatches.setTooltip((v) -> Component.translatable("not-enough-vulkan.option.skip_wayland_patches.tooltip"));
         skipWaylandPatches.setActivationFn(
-                () -> NotEnoughVulkanClientMod.mixinConfig().getOptions().get("mixin.compat.skip_wayland_patches").isEnabled() && ExtendedPlatform.specialIsWayLand()
-        );
-        SwitchOption forceX11 = new SwitchOption(
-                Component.translatable("not-enough-vulkan.option.force_x11"),
-                (value) -> notEnoughVulkanOptions.compatSettings.forceX11 = value,
-                () -> notEnoughVulkanOptions.compatSettings.forceX11
-        );
-        forceX11.setTooltip((v) -> Component.translatable("not-enough-vulkan.option.force_x11.tooltip"));
-        forceX11.setActivationFn(
-                () -> NotEnoughVulkanClientMod.mixinConfig().getOptions().get("mixin.compat.force_x11").isEnabled() && Platform.isWayLand()
+                () -> NotEnoughVulkanClientMod.mixinConfig().getOptions().get("mixin.compat.skip_wayland_patches").isEnabled() && Platform.isWayLand()
         );
         return new OptionBlock[]{
                 new OptionBlock("Compatibility", new Option[]{
-                        reduceResolutionOnMac, skipWaylandPatches, forceX11
+                        reduceResolutionOnMac, skipWaylandPatches
                 }),
                 new OptionBlock("Overlay", new Option[]{
                         new CyclingOption<>(

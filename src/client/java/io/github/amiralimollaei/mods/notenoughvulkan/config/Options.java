@@ -438,7 +438,7 @@ public abstract class Options {
         );
 
         SwitchOption forceX11;
-        if (NotEnoughVulkanClientMod.isVulkanModOlderThan("0.6.5-dev.3")) {
+        if (NotEnoughVulkanClientMod.isVulkanModOlderThan("0.6.6")) {
             forceX11 = new SwitchOption(
                     Component.translatable("not-enough-vulkan.option.force_x11"),
                     (value) -> notEnoughVulkanOptions.compatSettings.forceX11 = value,

@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 
 import java.nio.file.Path;
 import java.util.Arrays;
+import java.util.Objects;
 
 public class NotEnoughVulkanClientMod {
     private static NotEnoughVulkanGameOptions CONFIG;
@@ -27,12 +28,15 @@ public class NotEnoughVulkanClientMod {
         return LOGGER;
     }
 
-    public static boolean isVulkanModOlderThan(String version) {
-        String VKModVersion = Initializer.getVersion();
+    public static boolean isVulkanModOlderThanOrEqual(String version) {
+        Version VKModVersion = FabricLoader.getInstance().getAllMods().stream()
+                .filter((modContainer -> Objects.equals(modContainer.getMetadata().getId(), "vulkanmod")))
+                .findFirst().get().getMetadata().getVersion();
         try {
             SemanticVersion CompareSemVer = SemanticVersion.parse(version);
-            SemanticVersion VKModSemVer = SemanticVersion.parse(VKModVersion);
-            return VKModSemVer.compareTo((Version) CompareSemVer) < 0;
+            int comparisonResult = VKModVersion.compareTo(CompareSemVer);
+            NotEnoughVulkanClientMod.logger().info("comparisonResult: {}", comparisonResult);
+            return comparisonResult <= 0;
         } catch (VersionParsingException e) {
             NotEnoughVulkanClientMod.logger().warn("Unable to parse version: {}", VKModVersion);
             return false;
@@ -64,7 +68,10 @@ public class NotEnoughVulkanClientMod {
                     .addMixinOption("compat.bobby", packageExists("de.johni0702.minecraft.bobby"))
                     .addMixinOption("compat.skip_wayland_patches", true)
                     .addMixinOption("compat.monitor_selector", true)
-                    .addMixinOption("compat.force_x11", true)
+                    .addMixinOption(
+                            "compat.force_x11",
+                            NotEnoughVulkanClientMod.isVulkanModOlderThanOrEqual("0.6.5")
+                    )
 
                     //.withInfoUrl("https://github.com/amiralimollaei/not-enough-vulkan/wiki/Configuration-File")
                     .build(FabricLoader.getInstance().getConfigDir().resolve("not-enough-vulkan.properties"));

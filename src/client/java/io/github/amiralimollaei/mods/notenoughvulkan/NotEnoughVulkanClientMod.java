@@ -35,7 +35,6 @@ public class NotEnoughVulkanClientMod {
         try {
             SemanticVersion CompareSemVer = SemanticVersion.parse(version);
             int comparisonResult = VKModVersion.compareTo(CompareSemVer);
-            NotEnoughVulkanClientMod.logger().info("comparisonResult: {}", comparisonResult);
             return comparisonResult <= 0;
         } catch (VersionParsingException e) {
             NotEnoughVulkanClientMod.logger().warn("Unable to parse version: {}", VKModVersion);

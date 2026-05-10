@@ -7,9 +7,11 @@
   "compatibilityLevel": "JAVA_17",
   "client": [
     "compat.force_x11.PlatformMixin",
+    "compat.bobby.FakeChunkManagerMixin",
+    "compat.bobby.OptionsMixin",
+    "compat.monitor_selector.InitializerMixin",
     "compat.monitor_selector.OptionsMixin",
     "compat.monitor_selector.VideoModeManagerMixin",
-    "compat.monitor_selector.InitializerMixin",
     "compat.skip_wayland_patches.InputConstantsMMixin",
     "compat.skip_wayland_patches.MinecraftMixinSquared",
     "core.compact_vk_options.SwitchOptionWidgetMixin",

@@ -64,7 +64,7 @@ public class NotEnoughVulkanClientMod {
                     .addMixinOption("core", true, false)
                     .addMixinOption("core.compact_vk_options", false)
                     .addMixinOption("compat", true)
-                    //.addMixinOption("compat.bobby", packageExists("de.johni0702.minecraft.bobby"))
+                    .addMixinOption("compat.bobby", packageExists("de.johni0702.minecraft.bobby"))
                     .addMixinOption("compat.skip_wayland_patches", true)
                     .addMixinOption("compat.monitor_selector", true)
                     .addMixinOption(

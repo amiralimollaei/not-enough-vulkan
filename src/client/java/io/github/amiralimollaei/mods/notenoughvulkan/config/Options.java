@@ -1,7 +1,6 @@
 package io.github.amiralimollaei.mods.notenoughvulkan.config;
 
 import io.github.amiralimollaei.mods.notenoughvulkan.NotEnoughVulkanClientMod;
-import io.github.amiralimollaei.mods.notenoughvulkan.compat.force_x11.ExtendedPlatform;
 import me.flashyreese.mods.sodiumextra.client.SodiumExtraClientMod;
 import me.flashyreese.mods.sodiumextra.client.config.FogTypeConfig;
 import me.flashyreese.mods.sodiumextra.client.config.SodiumExtraGameOptions;
@@ -435,17 +434,31 @@ public abstract class Options {
         );
         skipWaylandPatches.setTooltip((v) -> Component.translatable("not-enough-vulkan.option.skip_wayland_patches.tooltip"));
         skipWaylandPatches.setActivationFn(
-                () -> NotEnoughVulkanClientMod.mixinConfig().getOptions().get("mixin.compat.skip_wayland_patches").isEnabled() && ExtendedPlatform.specialIsWayLand()
+                () -> NotEnoughVulkanClientMod.mixinConfig().getOptions().get("mixin.compat.skip_wayland_patches").isEnabled() && Platform.isWayLand()
         );
-        SwitchOption forceX11 = new SwitchOption(
-                Component.translatable("not-enough-vulkan.option.force_x11"),
-                (value) -> notEnoughVulkanOptions.compatSettings.forceX11 = value,
-                () -> notEnoughVulkanOptions.compatSettings.forceX11
-        );
+
+        SwitchOption forceX11;
+        if (NotEnoughVulkanClientMod.isVulkanModOlderThan("0.6.5-dev.3")) {
+            forceX11 = new SwitchOption(
+                    Component.translatable("not-enough-vulkan.option.force_x11"),
+                    (value) -> notEnoughVulkanOptions.compatSettings.forceX11 = value,
+                    () -> notEnoughVulkanOptions.compatSettings.forceX11
+            );
+            forceX11.setActivationFn(
+                    () -> NotEnoughVulkanClientMod.mixinConfig().getOptions().get("mixin.compat.force_x11").isEnabled() && supportsWayland()
+            );
+        } else {
+            notEnoughVulkanOptions.compatSettings.forceX11 = false;
+            forceX11 = new SwitchOption(
+                    Component.translatable("not-enough-vulkan.option.force_x11").append(
+                            Component.translatable("not-enough-vulkan.option.deprecated")
+                    ),
+                    (value) -> notEnoughVulkanOptions.compatSettings.forceX11 = value,
+                    () -> notEnoughVulkanOptions.compatSettings.forceX11
+            );
+            forceX11.setActivationFn(() -> false);
+        }
         forceX11.setTooltip((v) -> Component.translatable("not-enough-vulkan.option.force_x11.tooltip"));
-        forceX11.setActivationFn(
-                () -> NotEnoughVulkanClientMod.mixinConfig().getOptions().get("mixin.compat.force_x11").isEnabled() && Platform.isWayLand()
-        );
         return new OptionBlock[]{
                 new OptionBlock("Compatibility", new Option[]{
                         reduceResolutionOnMac, skipWaylandPatches, forceX11
@@ -551,9 +564,13 @@ public abstract class Options {
         };
     }
 
+    private static boolean supportsWayland() {
+        return System.getenv("XDG_SESSION_TYPE").equalsIgnoreCase("wayland");
+    }
+
 
     public static List<OptionPage> getModOptions() {
-        List<OptionPage> optionPages = new ArrayList();
+        List<OptionPage> optionPages = new ArrayList<>();
         optionPages.add(
                 new OptionPage(Component.translatable("sodium-extra.option.animations").getString(), getAnimationsOpts())
         );

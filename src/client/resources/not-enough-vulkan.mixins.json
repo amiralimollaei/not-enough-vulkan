@@ -6,7 +6,7 @@
   "refmap": "not-enough-vulkan.refmap.json",
   "compatibilityLevel": "JAVA_17",
   "client": [
-    "compat.force_x11.InitializerMixin",
+    "compat.force_x11.PlatformMixin",
     "compat.monitor_selector.OptionsMixin",
     "compat.monitor_selector.VideoModeManagerMixin",
     "compat.monitor_selector.InitializerMixin",

@@ -3,6 +3,9 @@ package io.github.amiralimollaei.mods.notenoughvulkan;
 import io.github.amiralimollaei.mods.notenoughvulkan.config.NotEnoughVulkanGameOptions;
 import net.caffeinemc.caffeineconfig.CaffeineConfig;
 import net.fabricmc.loader.api.FabricLoader;
+import net.fabricmc.loader.api.SemanticVersion;
+import net.fabricmc.loader.api.Version;
+import net.fabricmc.loader.api.VersionParsingException;
 import net.vulkanmod.Initializer;
 import net.vulkanmod.config.Config;
 import org.slf4j.Logger;
@@ -22,6 +25,18 @@ public class NotEnoughVulkanClientMod {
         }
 
         return LOGGER;
+    }
+
+    public static boolean isVulkanModOlderThan(String version) {
+        String VKModVersion = Initializer.getVersion();
+        try {
+            SemanticVersion CompareSemVer = SemanticVersion.parse(version);
+            SemanticVersion VKModSemVer = SemanticVersion.parse(VKModVersion);
+            return VKModSemVer.compareTo((Version) CompareSemVer) < 0;
+        } catch (VersionParsingException e) {
+            NotEnoughVulkanClientMod.logger().warn("Unable to parse version: {}", VKModVersion);
+            return false;
+        }
     }
 
     private static boolean packageExists(String packageName) {

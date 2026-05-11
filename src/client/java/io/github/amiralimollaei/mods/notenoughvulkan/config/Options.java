@@ -564,7 +564,9 @@ public abstract class Options {
     }
 
     private static boolean supportsWayland() {
-        return System.getenv("XDG_SESSION_TYPE").equalsIgnoreCase("wayland");
+        String sessionType = System.getenv("XDG_SESSION_TYPE");
+        if (sessionType == null) return false;
+        return sessionType.equalsIgnoreCase("wayland");
     }
 
 

@@ -32,7 +32,7 @@
     "issues": "https://github.com/amiralimollaei/not-enough-vulkan/issues"
   },
   "license": "LGPLv3",
-  "icon": "assets/not-enough-vulkan/textures/icon.png",
+  "icon": "assets/not-enough-vulkan/textures/icon-64x.png",
   "environment": "client",
   "entrypoints": {
     "client": [

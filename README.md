@@ -1,5 +1,5 @@
 <h1 align="left">
-<img src="src/client/resources/assets/not-enough-vulkan/textures/icon.png" width="50" align="left" />
+<img src="src/client/resources/assets/not-enough-vulkan/textures/icon-64x.png" width="50" align="left" />
   Not Enough Vulkan
 </h1>
 

@@ -1,30 +1,16 @@
 {
   "schemaVersion": 1,
   "id": "not-enough-vulkan",
-  "version": "1.5.2",
+  "version": "2.0.0",
   "name": "Not Enough Vulkan",
-  "description": "Features that shouldn't be in VulkanMod, a fork of Sodium Extra",
+  "description": "Compatibility layer for VulkanMod.",
   "authors": [
-    {
-      "name": "FlashyReese",
-      "contact": {
-        "homepage": "https://flashyreese.me"
-      }
-    },
     {
       "name": "amiralimollaei",
       "contact": {
         "homepage": "https://amiralimollaei.github.io"
       }
     }
-  ],
-  "contributors": [
-    "AMereBagatelle",
-    "DragonEggBedrockBreaking",
-    "EatMyVenom",
-    "HarvelsX",
-    "Kichura",
-    "Madis0"
   ],
   "contact": {
     "homepage": "https://modrinth.com/mod/not-enough-vulkan",
@@ -42,30 +28,23 @@
   },
   "custom": {
     "modmenu": {
-      "parent": {
-        "id": "vulkanmod"
-      },
       "links": {
-        "modmenu.crowdin": "https://crowdin.com/project/sodium-extra",
         "modmenu.discord": "https://discord.gg/BFmZU9kUbR",
-        "modmenu.donate": "https://ko-fi.com/flashyreese",
         "modmenu.github_releases": "https://github.com/amiralimollaei/not-enough-vulkan/releases",
-        "modmenu.kofi": "https://ko-fi.com/flashyreese",
         "modmenu.modrinth": "https://modrinth.com/mod/not-enough-vulkan"
       }
     }
   },
-  "accessWidener": "sodium-extra.accesswidener",
   "mixins": [
-    "sodium-extra.mixins.json",
     "not-enough-vulkan.mixins.json"
   ],
   "depends": {
     "fabricloader": ">=0.18",
     "vulkanmod": ">=0.6.3",
+    "sodium-extra": ">=0.6.3",
     "minecraft": ">=26.1"
   },
-  "breaks": {
-    "sodium": ">0.0.0"
-  }
+  "provides": [
+    "sodium"
+  ]
 }

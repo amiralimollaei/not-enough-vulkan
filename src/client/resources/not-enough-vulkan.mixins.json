@@ -3,19 +3,15 @@
   "minVersion": "0.8",
   "plugin": "io.github.amiralimollaei.mods.notenoughvulkan.mixin.NotEnoughVulkanMixinConfigPlugin",
   "package": "io.github.amiralimollaei.mods.notenoughvulkan.mixin",
-  "compatibilityLevel": "JAVA_25",
+  "compatibilityLevel": "JAVA_21",
   "client": [
     "compat.bobby.FakeChunkManagerMixin",
     "compat.bobby.OptionsMixin",
-    "compat.force_x11.PlatformMixin",
+    "compat.cloud.MixinCloudRenderer",
+    "compat.monitor_selector.InitializerMixin",
     "compat.monitor_selector.OptionsMixin",
     "compat.monitor_selector.VideoModeManagerMixin",
-    "compat.monitor_selector.InitializerMixin",
-    "compat.skip_wayland_patches.InputConstantsMMixin",
-    "compat.skip_wayland_patches.MinecraftMixinSquared",
-    "core.compact_vk_options.SwitchOptionWidgetMixin",
-    "core.compact_vk_options.VOptionListMixin",
-    "core.compact_vk_options.VOptionScreenMixin"
+    "compat.skip_wayland_patches.PlatformMixin"
   ],
   "injectors": {
     "defaultRequire": 1

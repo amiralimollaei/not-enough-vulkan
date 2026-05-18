@@ -403,33 +403,12 @@ public abstract class Options {
         );
         skipWaylandPatches.setTooltip((v) -> Component.translatable("not-enough-vulkan.option.skip_wayland_patches.tooltip"));
         skipWaylandPatches.setActivationFn(
-                () -> NotEnoughVulkanClientMod.mixinConfig().getOptions().get("mixin.compat.skip_wayland_patches").isEnabled() && Platform.isWayLand()
+                () -> NotEnoughVulkanClientMod.mixinConfig().getOptions().get("mixin.compat.skip_wayland_patches").isEnabled()
         );
 
-        SwitchOption forceX11;
-        if (NotEnoughVulkanClientMod.mixinConfig().getOptions().get("mixin.compat.force_x11").isEnabled()) {
-            forceX11 = new SwitchOption(
-                    Component.translatable("not-enough-vulkan.option.force_x11"),
-                    (value) -> notEnoughVulkanOptions.compatSettings.forceX11 = value,
-                    () -> notEnoughVulkanOptions.compatSettings.forceX11
-            );
-        } else {
-            notEnoughVulkanOptions.compatSettings.forceX11 = false;
-            forceX11 = new SwitchOption(
-                    Component.translatable("not-enough-vulkan.option.force_x11").append(
-                            Component.translatable("not-enough-vulkan.option.deprecated")
-                    ),
-                    (value) -> notEnoughVulkanOptions.compatSettings.forceX11 = value,
-                    () -> notEnoughVulkanOptions.compatSettings.forceX11
-            );
-        }
-        forceX11.setTooltip((v) -> Component.translatable("not-enough-vulkan.option.force_x11.tooltip"));
-        forceX11.setActivationFn(
-                () -> NotEnoughVulkanClientMod.mixinConfig().getOptions().get("mixin.compat.force_x11").isEnabled() && supportsWayland()
-        );
         return new OptionBlock[]{
                 new OptionBlock("Compatibility", new Option[]{
-                        reduceResolutionOnMac, skipWaylandPatches, forceX11
+                        reduceResolutionOnMac, skipWaylandPatches
                 }),
                 new OptionBlock("Overlay", new Option[]{
                         new CyclingOption<>(

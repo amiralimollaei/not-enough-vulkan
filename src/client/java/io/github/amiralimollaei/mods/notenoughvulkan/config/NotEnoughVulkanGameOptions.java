@@ -62,11 +62,9 @@ public class NotEnoughVulkanGameOptions {
     public static class CompatSettings {
         public boolean skipWaylandPatches;
         public String selectedMonitor;
-        public boolean forceX11;
 
         public CompatSettings() {
             skipWaylandPatches = false;
-            forceX11 = false;
         }
     }
 }

@@ -51,28 +51,26 @@ loom {
         useLegacyMixinAp = false
         //defaultRefmapName = "sodium-extra.refmap.json"
     }
-
-    accessWidenerPath = file("src/client/resources/sodium-extra.accesswidener")
-
 }
 
 
 dependencies {
     // To change the versions see the gradle.properties file
     minecraft "com.mojang:minecraft:${project.minecraft_version}"
-
     implementation "net.fabricmc:fabric-loader:${project.loader_version}"
-
-    include(implementation(annotationProcessor("com.github.bawnorton.mixinsquared:mixinsquared-fabric:0.3.7-beta.1")))
-
     // Fabric API. This is technically optional, but you probably want it anyway.
     implementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+
     // Mod Menu
     // implementation "com.terraformersmc:modmenu:${project.modmenu_version}"
+
     // VulkanMod, for some reason implementation makes the client not launch
     implementation "maven.modrinth:vulkanmod:${project.vulkanmod_version}"
-    //compileOnly files("libs/VulkanMod_26.1.2-0.6.3.jar")
-    // Bobby compatibility
+
+    // ---- compatibility ----
+    // sodium-extra
+    compileOnly "maven.modrinth:sodium-extra:${project.sodium_extra_version}"
+    // Bobby
     compileOnly "maven.modrinth:bobby:${project.bobby_version}"
 }
 

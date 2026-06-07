@@ -35,8 +35,8 @@
   "icon": "assets/not-enough-vulkan/textures/icon-64x.png",
   "environment": "client",
   "entrypoints": {
-    "client": [
-      "io.github.amiralimollaei.mods.notenoughvulkan.NotEnoughVulkanModInitializer"
+    "vulkanmod:mod_settings_registry": [
+      "io.github.amiralimollaei.mods.notenoughvulkan.config.NEVSettingsFactory"
     ]
   },
   "custom": {

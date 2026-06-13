@@ -11,7 +11,6 @@ val PARCHMENT_VERSION: String? by rootProject.extra
 val FABRIC_LOADER_VERSION: String by rootProject.extra
 val FABRIC_API_VERSION: String by rootProject.extra
 
-val SODIUM_VERSION: String by rootProject.extra
 
 // This trick hides common tasks in the IDEA list.
 tasks.configureEach {
@@ -19,7 +18,7 @@ tasks.configureEach {
 }
 
 dependencies {
-    minecraft(group = "com.mojang", name = "minecraft", version = MINECRAFT_VERSION)
+    minecraft("com.mojang:minecraft:$MINECRAFT_VERSION")
     mappings(loom.layered() {
         officialMojangMappings()
         if (PARCHMENT_VERSION != null) {
@@ -38,8 +37,6 @@ dependencies {
     addDependentFabricModule("fabric-api-base")
     addDependentFabricModule("fabric-block-view-api-v2")
     //addDependentFabricModule("fabric-renderer-api-v1")
-
-    modImplementation("net.caffeinemc:sodium-fabric:$SODIUM_VERSION")
 }
 
 tasks.withType<AbstractRemapJarTask>().forEach {
@@ -51,10 +48,10 @@ loom {
         defaultRefmapName = "${rootProject.name}.refmap.json"
     }
 
-    accessWidenerPath = file("src/main/resources/${rootProject.name}.accesswidener")
+    accessWidenerPath = file("src/main/resources/sodium-extra.accesswidener")
 }
 
-publishing {
+/*publishing {
     publications {
         create<MavenPublication>("mavenJava") {
             artifactId = base.archivesName.get()
@@ -80,4 +77,4 @@ publishing {
             }
         }
     }
-}
+}*/

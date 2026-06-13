@@ -12,10 +12,11 @@ val FABRIC_API_VERSION by extra { "0.140.0+1.21.11" }
 val PARCHMENT_VERSION by extra { null }
 
 // https://semver.org/
-val MAVEN_GROUP by extra { "me.flashyreese.mods" }
-val ARCHIVE_NAME by extra { "sodium-extra" }
-val MOD_VERSION by extra { "0.8.3" }
-val SODIUM_VERSION by extra { "0.8.2+mc1.21.11" }
+val MAVEN_GROUP by extra { "io.github.amiralimollaei.mods" }
+val ARCHIVE_NAME by extra { "not-enough-vulkan" }
+val MOD_VERSION by extra { "1.6.0" }
+val VULKANMOD_VERSION by extra { "0.6.7+1.21.11" }
+val BOBBY_VERSION by extra { "5.2.11+mc1.21.11" }
 
 allprojects {
     apply(plugin = "java")
@@ -33,26 +34,19 @@ subprojects {
 
     repositories {
         maven("https://maven.parchmentmc.org/")
-        maven("https://maven.caffeinemc.net/releases")
-        maven("https://maven.caffeinemc.net/snapshots")
         maven("https://api.modrinth.com/maven")
         maven("https://libraries.minecraft.net")
+        maven("https://maven.bawnorton.com/releases")
     }
 
     base {
         archivesName = "$ARCHIVE_NAME-${project.name}"
     }
 
-    java.toolchain.languageVersion = JavaLanguageVersion.of(21)
-
-    tasks.processResources {
-        filesMatching("META-INF/neoforge.mods.toml") {
-            expand(mapOf("version" to createVersionString()))
-        }
-    }
+    java.toolchain.languageVersion = JavaLanguageVersion.of(25)
 
     version = createVersionString()
-    group = "me.flashyreese.mods"
+    group = MAVEN_GROUP
 
     tasks.withType<JavaCompile> {
         options.encoding = "UTF-8"

@@ -10,7 +10,8 @@ val FABRIC_LOADER_VERSION: String by rootProject.extra
 val FABRIC_API_VERSION: String by rootProject.extra
 val MOD_VERSION: String by rootProject.extra
 
-val SODIUM_VERSION: String by rootProject.extra
+val VULKANMOD_VERSION: String by rootProject.extra
+val BOBBY_VERSION: String by rootProject.extra
 val ARCHIVE_NAME: String by rootProject.extra
 
 base {
@@ -20,6 +21,7 @@ base {
 dependencies {
     minecraft("com.mojang:minecraft:${MINECRAFT_VERSION}")
     compileOnly("net.fabricmc:fabric-loader:$FABRIC_LOADER_VERSION")
+    implementation("com.github.bawnorton.mixinsquared:mixinsquared-fabric:0.3.7-beta.2")
 
     fun addEmbeddedFabricModule(name: String) {
         val module = fabricApi.module(name, FABRIC_API_VERSION)
@@ -30,8 +32,10 @@ dependencies {
     addEmbeddedFabricModule("fabric-api-base")
     addEmbeddedFabricModule("fabric-block-getter-api-v2")
     addEmbeddedFabricModule("fabric-rendering-v1")
+
     compileOnly(project(":common"))
-    implementation("net.caffeinemc:sodium-fabric:$SODIUM_VERSION")
+    implementation("maven.modrinth:vulkanmod:$VULKANMOD_VERSION")
+    implementation("maven.modrinth:bobby:$BOBBY_VERSION")
 }
 
 tasks.test {
@@ -39,7 +43,7 @@ tasks.test {
 }
 
 loom {
-    accessWidenerPath.set(project(":common").file("src/main/resources/${rootProject.name}.accesswidener"))
+    accessWidenerPath.set(project(":common").file("src/main/resources/sodium-extra.accesswidener"))
 
     @Suppress("UnstableApiUsage")
     mixin { defaultRefmapName.set("${rootProject.name}.refmap.json") }
@@ -86,7 +90,7 @@ tasks.named("validateAccessWidener").configure {
     dependsOn(":common:genSourcesWithVineflower")
 }
 
-publishing {
+/*publishing {
     publications {
         create<MavenPublication>("mavenJava") {
             artifactId = base.archivesName.get()
@@ -112,4 +116,4 @@ publishing {
             }
         }
     }
-}
+}*/

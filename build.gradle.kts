@@ -9,10 +9,11 @@ val FABRIC_LOADER_VERSION by extra { "0.18.6" }
 val FABRIC_API_VERSION by extra { "0.145.3+26.1.1" }
 
 // https://semver.org/
-val MAVEN_GROUP by extra { "me.flashyreese.mods" }
-val ARCHIVE_NAME by extra { "sodium-extra" }
+val MAVEN_GROUP by extra { "io.github.amiralimollaei.mods" }
+val ARCHIVE_NAME by extra { "not-enough-vulkan" }
 val MOD_VERSION by extra { "0.8.7" }
-val SODIUM_VERSION by extra { "0.8.9+mc26.1.1" }
+val VULKANMOD_VERSION by extra { "0.6.7+26.1.2" }
+val BOBBY_VERSION by extra { "5.2.13+mc26.1" }
 
 allprojects {
     apply(plugin = "java")
@@ -30,10 +31,9 @@ subprojects {
 
     repositories {
         maven("https://maven.parchmentmc.org/")
-        maven("https://maven.caffeinemc.net/releases")
-        maven("https://maven.caffeinemc.net/snapshots")
         maven("https://api.modrinth.com/maven")
         maven("https://libraries.minecraft.net")
+        maven("https://maven.bawnorton.com/releases")
     }
 
     base {

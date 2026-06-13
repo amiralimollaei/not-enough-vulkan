@@ -9,10 +9,6 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class SodiumExtraConfigUtils {
-    public static Identifier id(String path) {
-        return Identifier.parse("sodium-extra:" + path);
-    }
-
     public static Component parseVanillaString(String key) {
         // Strip formatting codes like "§a"
         return Component.literal(Component.translatable(key).getString().replaceAll("§.", ""));

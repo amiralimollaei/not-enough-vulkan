@@ -1,5 +1,6 @@
 package io.github.amiralimollaei.mods.notenoughvulkan;
 
+import io.github.amiralimollaei.mods.notenoughvulkan.client.NotEnoughVulkanClientMod;
 import net.fabricmc.api.ClientModInitializer;
 import me.flashyreese.mods.sodiumextra.client.SodiumExtraClientMod;
 import net.vulkanmod.config.gui.ModSettingsRegistry;

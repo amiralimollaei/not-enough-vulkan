@@ -2,7 +2,7 @@ package io.github.amiralimollaei.mods.notenoughvulkan.mixin.compat.force_x11;
 
 import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
-import io.github.amiralimollaei.mods.notenoughvulkan.NotEnoughVulkanClientMod;
+import io.github.amiralimollaei.mods.notenoughvulkan.client.NotEnoughVulkanClientMod;
 import net.vulkanmod.config.Platform;
 import org.spongepowered.asm.mixin.*;
 

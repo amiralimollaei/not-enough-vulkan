@@ -3,7 +3,7 @@ package io.github.amiralimollaei.mods.notenoughvulkan.config;
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import io.github.amiralimollaei.mods.notenoughvulkan.NotEnoughVulkanClientMod;
+import io.github.amiralimollaei.mods.notenoughvulkan.client.NotEnoughVulkanClientMod;
 import me.flashyreese.mods.sodiumextra.common.util.IdentifierSerializer;
 import net.minecraft.resources.Identifier;
 

@@ -1,4 +1,4 @@
-package io.github.amiralimollaei.mods.notenoughvulkan;
+package io.github.amiralimollaei.mods.notenoughvulkan.client;
 
 import io.github.amiralimollaei.mods.notenoughvulkan.config.NotEnoughVulkanGameOptions;
 import net.caffeinemc.caffeineconfig.CaffeineConfig;

@@ -1,6 +1,6 @@
 package io.github.amiralimollaei.mods.notenoughvulkan.compat.monitor_selector;
 
-import io.github.amiralimollaei.mods.notenoughvulkan.NotEnoughVulkanClientMod;
+import io.github.amiralimollaei.mods.notenoughvulkan.client.NotEnoughVulkanClientMod;
 import net.vulkanmod.config.Config;
 import net.vulkanmod.config.video.VideoModeManager;
 import org.jspecify.annotations.Nullable;

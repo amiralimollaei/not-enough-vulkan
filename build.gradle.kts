@@ -11,7 +11,7 @@ val FABRIC_API_VERSION by extra { "0.145.3+26.1.1" }
 // https://semver.org/
 val MAVEN_GROUP by extra { "io.github.amiralimollaei.mods" }
 val ARCHIVE_NAME by extra { "not-enough-vulkan" }
-val MOD_VERSION by extra { "0.8.7" }
+val MOD_VERSION by extra { "1.6.0" }
 val VULKANMOD_VERSION by extra { "0.6.7+26.1.2" }
 val BOBBY_VERSION by extra { "5.2.13+mc26.1" }
 
@@ -42,14 +42,8 @@ subprojects {
 
     java.toolchain.languageVersion = JavaLanguageVersion.of(25)
 
-    tasks.processResources {
-        filesMatching("META-INF/neoforge.mods.toml") {
-            expand(mapOf("version" to createVersionString()))
-        }
-    }
-
     version = createVersionString()
-    group = "me.flashyreese.mods"
+    group = MAVEN_GROUP
 
     tasks.withType<JavaCompile> {
         options.encoding = "UTF-8"

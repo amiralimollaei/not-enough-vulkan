@@ -21,7 +21,10 @@ base {
 dependencies {
     minecraft("com.mojang:minecraft:${MINECRAFT_VERSION}")
     implementation("net.fabricmc:fabric-loader:$FABRIC_LOADER_VERSION")
+
+    include("com.github.bawnorton.mixinsquared:mixinsquared-fabric:0.3.7-beta.2")
     implementation("com.github.bawnorton.mixinsquared:mixinsquared-fabric:0.3.7-beta.2")
+    annotationProcessor("com.github.bawnorton.mixinsquared:mixinsquared-fabric:0.3.7-beta.2")
 
     fun addEmbeddedFabricModule(name: String) {
         val module = fabricApi.module(name, FABRIC_API_VERSION)

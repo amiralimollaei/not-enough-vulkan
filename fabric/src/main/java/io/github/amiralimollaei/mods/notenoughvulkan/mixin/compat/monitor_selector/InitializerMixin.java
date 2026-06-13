@@ -1,6 +1,6 @@
 package io.github.amiralimollaei.mods.notenoughvulkan.mixin.compat.monitor_selector;
 
-import io.github.amiralimollaei.mods.notenoughvulkan.NotEnoughVulkanClientMod;
+import io.github.amiralimollaei.mods.notenoughvulkan.client.NotEnoughVulkanClientMod;
 import net.vulkanmod.Initializer;
 import net.vulkanmod.config.Config;
 import org.spongepowered.asm.mixin.Mixin;

@@ -1,6 +1,6 @@
 package io.github.amiralimollaei.mods.notenoughvulkan.mixin;
 
-import io.github.amiralimollaei.mods.notenoughvulkan.NotEnoughVulkanClientMod;
+import io.github.amiralimollaei.mods.notenoughvulkan.client.NotEnoughVulkanClientMod;
 import net.caffeinemc.caffeineconfig.AbstractCaffeineConfigMixinPlugin;
 import net.caffeinemc.caffeineconfig.CaffeineConfig;
 

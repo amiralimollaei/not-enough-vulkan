@@ -1,6 +1,6 @@
 package io.github.amiralimollaei.mods.notenoughvulkan.config;
 
-import io.github.amiralimollaei.mods.notenoughvulkan.NotEnoughVulkanClientMod;
+import io.github.amiralimollaei.mods.notenoughvulkan.client.NotEnoughVulkanClientMod;
 import me.flashyreese.mods.sodiumextra.client.SodiumExtraClientMod;
 import me.flashyreese.mods.sodiumextra.client.config.FogTypeConfig;
 import me.flashyreese.mods.sodiumextra.client.config.SodiumExtraGameOptions;

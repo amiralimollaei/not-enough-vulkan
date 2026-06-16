@@ -1,0 +1,9 @@
+{
+  "not-enough-vulkan.option.deprecated": " (Deprecated)",
+  "not-enough-vulkan.option.skip_wayland_patches": "Skip Wayland Patches",
+  "not-enough-vulkan.option.skip_wayland_patches.tooltip": "Skips wayland compatibility patches on linux to enable custom GLFW workarounds (only available when using wayland), Some effects require a restart.",
+  "not-enough-vulkan.option.monitor_selector": "Fullscreen Monitor",
+  "not-enough-vulkan.option.monitor_selector.tooltip": "The monitor that will be used when the game is in Fullscreen mode",
+  "not-enough-vulkan.option.force_x11": "Force X11",
+  "not-enough-vulkan.option.force_x11.tooltip": "Forces the game to run under X11 (or XWayland) instead of native Wayland, this should fix bugs related to Wayland, requires a restart."
+}

@@ -19,13 +19,8 @@ jobs:
           check-latest: true
       - name: Build with Gradle
         run: ./gradlew build
-      - name: Upload Build Artifacts - Fabric
+      - name: Upload Build Artifacts
         uses: actions/upload-artifact@v7
         with:
-          name: 'Sodium Extra Fabric Artifacts'
+          name: 'Not Enough Vulkan Fabric Artifacts'
           path: fabric/build/libs
-      - name: Upload Build Artifacts - NeoForge
-        uses: actions/upload-artifact@v7
-        with:
-          name: 'Sodium Extra NeoForge Artifacts'
-          path: neoforge/build/libs

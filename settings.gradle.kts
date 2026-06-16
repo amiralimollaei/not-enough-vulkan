@@ -1,4 +1,4 @@
-rootProject.name = "sodium-extra"
+rootProject.name = "not-enough-vulkan"
 
 pluginManagement {
     repositories {
@@ -10,4 +10,3 @@ pluginManagement {
 
 include("common")
 include("fabric")
-include("neoforge")

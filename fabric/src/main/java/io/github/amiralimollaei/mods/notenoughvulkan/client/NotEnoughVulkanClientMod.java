@@ -29,9 +29,7 @@ public class NotEnoughVulkanClientMod {
     }
 
     public static boolean isVulkanModOlderThanOrEqual(String version) {
-        Version VKModVersion = FabricLoader.getInstance().getAllMods().stream()
-                .filter((modContainer -> Objects.equals(modContainer.getMetadata().getId(), "vulkanmod")))
-                .findFirst().get().getMetadata().getVersion();
+        Version VKModVersion = getModVersion("vulkanmod");
         try {
             SemanticVersion CompareSemVer = SemanticVersion.parse(version);
             int comparisonResult = VKModVersion.compareTo(CompareSemVer);
@@ -40,6 +38,13 @@ public class NotEnoughVulkanClientMod {
             NotEnoughVulkanClientMod.logger().warn("Unable to parse version: {}", VKModVersion);
             return false;
         }
+    }
+
+    public static Version getModVersion(String modId) {
+        Version modVersion = FabricLoader.getInstance().getAllMods().stream()
+                .filter((modContainer -> Objects.equals(modContainer.getMetadata().getId(), modId)))
+                .findFirst().get().getMetadata().getVersion();
+        return modVersion;
     }
 
     private static boolean packageExists(String packageName) {
@@ -58,7 +63,7 @@ public class NotEnoughVulkanClientMod {
         if (MIXIN_CONFIG == null) {
             MIXIN_CONFIG = CaffeineConfig.builder("Not Enough Vulkan").withSettingsKey("not-enough-vulkan:options")
                     .addMixinOption("core", true, false)
-                    .addMixinOption("core.compact_vk_options", false)
+                    .addMixinOption("core.enhance_vk_options", true)
                     .addMixinOption("compat", true)
                     .addMixinOption("compat.bobby", packageExists("de.johni0702.minecraft.bobby"))
                     .addMixinOption("compat.skip_wayland_patches", true)

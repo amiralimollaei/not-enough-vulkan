@@ -47,7 +47,7 @@ dependencies {
     compileOnly(project(":common"))
 
     add("modImplementation", "maven.modrinth:vulkanmod:$VULKANMOD_VERSION")
-    add("modImplementation", "maven.modrinth:bobby:$BOBBY_VERSION")
+    add("modCompileOnly", "maven.modrinth:bobby:$BOBBY_VERSION")
 }
 
 tasks.test {

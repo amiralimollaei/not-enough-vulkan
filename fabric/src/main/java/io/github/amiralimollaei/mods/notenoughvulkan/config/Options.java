@@ -7,6 +7,7 @@ import net.minecraft.client.*;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.levelgen.WorldDimensions;
 import net.minecraft.world.level.material.FogType;
 import net.vulkanmod.config.Platform;
 import net.vulkanmod.config.gui.OptionBlock;
@@ -15,6 +16,7 @@ import net.vulkanmod.config.option.*;
 import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
+import java.util.stream.Stream;
 
 import static me.flashyreese.mods.sodiumextra.client.config.SodiumExtraConfigUtils.*;
 
@@ -120,6 +122,32 @@ public abstract class Options {
         return option;
     }
 
+    private static RangeOption newStandardRangeOption(String key, int min, int max, int step, Consumer<Integer> setter, Supplier<Integer> getter) {
+        RangeOption option = new RangeOption(
+                Component.translatable("sodium-extra.option."+key),
+                min,
+                max,
+                step,
+                setter,
+                getter
+        );
+        option.setTooltip((v) -> Component.translatable("sodium-extra.option."+key+".tooltip"));
+        return option;
+    }
+
+    private static RangeOption newStandardRangeOption(Component name, Component tooltip, int min, int max, int step, Consumer<Integer> setter, Supplier<Integer> getter) {
+        RangeOption option = new RangeOption(
+                name,
+                min,
+                max,
+                step,
+                setter,
+                getter
+        );
+        option.setTooltip((v) -> tooltip);
+        return option;
+    }
+
     public static OptionBlock[] getDetailsOpts() {
         return new OptionBlock[]{
                 new OptionBlock("", new Option[]{
@@ -158,17 +186,67 @@ public abstract class Options {
     public static OptionBlock[] getRenderOpts() {
         List<OptionBlock> optionBlocks = new ArrayList<>();
 
+        var multiDimensionFogOption = newStandardSwitchOption(
+                "multi_dimension_fog",
+                value -> sodiumExtraOptions.renderSettings.multiDimensionFogControl = value,
+                () -> sodiumExtraOptions.renderSettings.multiDimensionFogControl
+        );
+
+        var fogStartOption = newStandardRangeOption(
+                "fog_start",
+                0, 100, 1,
+                value -> sodiumExtraOptions.renderSettings.fogStart = value,
+                () -> sodiumExtraOptions.renderSettings.fogStart
+        );
+
+        var singleFogOption = newStandardRangeOption(
+                "single_fog",
+                0, 32, 1,
+                value -> sodiumExtraOptions.renderSettings.fogDistance = value,
+                () -> sodiumExtraOptions.renderSettings.fogDistance
+        );
+        singleFogOption.setActivationFn(() -> !multiDimensionFogOption.getNewValue());
+
         optionBlocks.add(new OptionBlock("", new Option[]{
-                newStandardSwitchOption("global_fog",
-                        value -> sodiumExtraOptions.renderSettings.globalFog = value,
-                        () -> sodiumExtraOptions.renderSettings.globalFog
-                )
+                multiDimensionFogOption,
+                fogStartOption
         }));
 
-        Arrays.stream(FogType.values())
-                .sorted(Comparator.comparing(Enum::name))
-                .filter(type -> type != FogType.NONE)
-                .forEach(fogtype -> optionBlocks.add(Options.newFogRenderOptionBlock(fogtype)));
+        optionBlocks.add(new OptionBlock("", new Option[]{
+                singleFogOption
+        }));
+
+        WorldDimensions.keysInOrder(Stream.empty())
+                .filter(dim -> !sodiumExtraOptions.renderSettings.dimensionFogDistanceMap.containsKey(dim.location()))
+                .forEach(dim -> sodiumExtraOptions.renderSettings.dimensionFogDistanceMap.put(dim.location(), 0));
+
+        List<RangeOption> dimensionFogOptions = new ArrayList<>();
+        sodiumExtraOptions.renderSettings.dimensionFogDistanceMap.keySet().stream()
+                .sorted(Comparator.comparing(ResourceLocation::toString))
+                .forEach(identifier -> {
+                    var dimensionFogOption = newStandardRangeOption(
+                            Component.translatable("sodium-extra.option.fog", translatableName(identifier, "dimensions")),
+                            Component.translatable("sodium-extra.option.fog.tooltip"),
+                            0, 32, 1,
+                            value -> SodiumExtraClientMod.options().renderSettings.dimensionFogDistanceMap.put(identifier, value),
+                            () -> SodiumExtraClientMod.options().renderSettings.dimensionFogDistanceMap.getOrDefault(identifier, 0)
+                    );
+                    dimensionFogOption.setActivationFn(multiDimensionFogOption::getNewValue);
+                    dimensionFogOptions.add(dimensionFogOption);
+                });
+        RangeOption[] dimensionFogOptionsArray = new RangeOption[dimensionFogOptions.size()];
+        dimensionFogOptionsArray = dimensionFogOptions.toArray(dimensionFogOptionsArray);
+
+        multiDimensionFogOption.setOnChange(() -> {
+            singleFogOption.updateActiveState();
+            singleFogOption.resetValue();
+            for (var option: dimensionFogOptions) {
+                option.updateActiveState();
+                option.resetValue();
+            }
+        });
+
+        optionBlocks.add(new OptionBlock("", dimensionFogOptionsArray));
 
         optionBlocks.add(new OptionBlock("Light Updates", new Option[]{
                 newStandardSwitchOption("light_updates",
@@ -237,99 +315,6 @@ public abstract class Options {
         return optionBlockArray;
     }
 
-    private static OptionBlock newFogRenderOptionBlock(FogType fogType) {
-        // Environment Start
-        RangeOption envStart = new RangeOption(
-                Component.translatable("sodium-extra.option.fog_type.environment_start", fogTypeName(fogType)),
-                0, 300, 1,
-                val -> {
-                    FogTypeConfig ftconfig = sodiumExtraOptions.renderSettings.fogTypeConfig.computeIfAbsent(fogType, k -> new FogTypeConfig());
-                    ftconfig.environmentStartMultiplier = val;
-                },
-                () -> sodiumExtraOptions.renderSettings.fogTypeConfig.computeIfAbsent(fogType, k -> new FogTypeConfig()).environmentStartMultiplier
-        );
-        envStart.setTooltip((v) -> Component.translatable("sodium-extra.option.fog_type.environment_start.tooltip"));
-
-        // Environment End
-        RangeOption envEnd = new RangeOption(
-                Component.translatable("sodium-extra.option.fog_type.environment_end", fogTypeName(fogType)),
-                0, 300, 1,
-                val -> {
-                    FogTypeConfig ftconfig = sodiumExtraOptions.renderSettings.fogTypeConfig.computeIfAbsent(fogType, k -> new FogTypeConfig());
-                    ftconfig.environmentEndMultiplier = val;
-                },
-                () -> sodiumExtraOptions.renderSettings.fogTypeConfig.computeIfAbsent(fogType, k -> new FogTypeConfig()).environmentEndMultiplier
-        );
-        envEnd.setTooltip((v) -> Component.translatable("sodium-extra.option.fog_type.environment_end.tooltip"));
-
-        // Render Start
-        RangeOption renderStart = new RangeOption(
-                Component.translatable("sodium-extra.option.fog_type.render_distance_start", fogTypeName(fogType)),
-                0, 300, 1,
-                val -> {
-                    FogTypeConfig ftconfig = sodiumExtraOptions.renderSettings.fogTypeConfig.computeIfAbsent(fogType, k -> new FogTypeConfig());
-                    ftconfig.renderDistanceStartMultiplier = val;
-                },
-                () -> sodiumExtraOptions.renderSettings.fogTypeConfig.computeIfAbsent(fogType, k -> new FogTypeConfig()).renderDistanceStartMultiplier
-        );
-        renderStart.setTooltip((v) -> Component.translatable("sodium-extra.option.fog_type.render_distance_start.tooltip"));
-
-        // Render End
-        RangeOption renderEnd = new RangeOption(
-                Component.translatable("sodium-extra.option.fog_type.render_distance_end", fogTypeName(fogType)),
-                0, 300, 1,
-                val -> {
-                    FogTypeConfig ftconfig = sodiumExtraOptions.renderSettings.fogTypeConfig.computeIfAbsent(fogType, k -> new FogTypeConfig());
-                    ftconfig.renderDistanceEndMultiplier = val;
-                },
-                () -> sodiumExtraOptions.renderSettings.fogTypeConfig.computeIfAbsent(fogType, k -> new FogTypeConfig()).renderDistanceEndMultiplier
-        );
-        renderEnd.setTooltip((v) -> Component.translatable("sodium-extra.option.fog_type.render_distance_end.tooltip"));
-
-        // Sky End
-        RangeOption skyEnd = new RangeOption(
-                Component.translatable("sodium-extra.option.fog_type.sky_end", fogTypeName(fogType)),
-                0, 300, 1,
-                val -> {
-                    FogTypeConfig ftconfig = sodiumExtraOptions.renderSettings.fogTypeConfig.computeIfAbsent(fogType, k -> new FogTypeConfig());
-                    ftconfig.skyEndMultiplier = val;
-                },
-                () -> sodiumExtraOptions.renderSettings.fogTypeConfig.computeIfAbsent(fogType, k -> new FogTypeConfig()).skyEndMultiplier
-        );
-        skyEnd.setTooltip((v) -> Component.translatable("sodium-extra.option.fog_type.sky_end.tooltip"));
-
-        // Sky End
-        RangeOption cloudEnd = new RangeOption(
-                Component.translatable("sodium-extra.option.fog_type.cloud_end", fogTypeName(fogType)),
-                0, 300, 1,
-                val -> {
-                    FogTypeConfig ftconfig = sodiumExtraOptions.renderSettings.fogTypeConfig.computeIfAbsent(fogType, k -> new FogTypeConfig());
-                    ftconfig.cloudEndMultiplier = val;
-                },
-                () -> sodiumExtraOptions.renderSettings.fogTypeConfig.computeIfAbsent(fogType, k -> new FogTypeConfig()).cloudEndMultiplier
-        );
-        cloudEnd.setTooltip((v) -> Component.translatable("sodium-extra.option.fog_type.cloud_end.tooltip"));
-
-        SwitchOption all = new SwitchOption(
-                fogTypeName(fogType),
-                (val) -> sodiumExtraOptions.renderSettings.fogTypeConfig.computeIfAbsent(fogType, k -> new FogTypeConfig()).enable = val,
-                () -> sodiumExtraOptions.renderSettings.fogTypeConfig.computeIfAbsent(fogType, k -> new FogTypeConfig()).enable
-        );
-        all.setTooltip((v) -> fogTypeTooltip(fogType));
-
-        // Add group
-        return new OptionBlock(
-                "Fog Type: " + fogType.name(), new Option[]{
-                all,
-                envStart,
-                envEnd,
-                renderStart,
-                renderEnd,
-                skyEnd,
-                cloudEnd
-        });
-    }
-
     public static OptionBlock[] getExtrasOpts() {
         SwitchOption reduceResolutionOnMac = new SwitchOption(
                 Component.translatable("sodium-extra.option.reduce_resolution_on_mac"),
@@ -350,30 +335,9 @@ public abstract class Options {
                 () -> NotEnoughVulkanClientMod.mixinConfig().getOptions().get("mixin.compat.skip_wayland_patches").isEnabled() && Platform.isWayLand()
         );
 
-        SwitchOption forceX11;
-        if (NotEnoughVulkanClientMod.mixinConfig().getOptions().get("mixin.compat.force_x11").isEnabled()) {
-            forceX11 = new SwitchOption(
-                    Component.translatable("not-enough-vulkan.option.force_x11"),
-                    (value) -> notEnoughVulkanOptions.compatSettings.forceX11 = value,
-                    () -> notEnoughVulkanOptions.compatSettings.forceX11
-            );
-        } else {
-            notEnoughVulkanOptions.compatSettings.forceX11 = false;
-            forceX11 = new SwitchOption(
-                    Component.translatable("not-enough-vulkan.option.force_x11").append(
-                            Component.translatable("not-enough-vulkan.option.deprecated")
-                    ),
-                    (value) -> notEnoughVulkanOptions.compatSettings.forceX11 = value,
-                    () -> notEnoughVulkanOptions.compatSettings.forceX11
-            );
-        }
-        forceX11.setTooltip((v) -> Component.translatable("not-enough-vulkan.option.force_x11.tooltip"));
-        forceX11.setActivationFn(
-                () -> NotEnoughVulkanClientMod.mixinConfig().getOptions().get("mixin.compat.force_x11").isEnabled() && supportsWayland()
-        );
         return new OptionBlock[]{
                 new OptionBlock("Compatibility", new Option[]{
-                        reduceResolutionOnMac, skipWaylandPatches, forceX11
+                        reduceResolutionOnMac, skipWaylandPatches
                 }),
                 new OptionBlock("Overlay", new Option[]{
                         new CyclingOption<>(

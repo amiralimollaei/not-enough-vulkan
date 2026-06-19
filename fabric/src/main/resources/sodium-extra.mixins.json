@@ -5,7 +5,6 @@
   "plugin": "me.flashyreese.mods.sodiumextra.mixin.SodiumExtraMixinConfigPlugin",
   "compatibilityLevel": "JAVA_21",
   "client": [
-    "adaptive_sync.MixinWindow",
     "animation.MixinSpriteAtlasTexture",
     "biome_colors.MixinBiomeColors",
     "cloud.MixinDimensionEffectsOverworld",
@@ -17,9 +16,6 @@
     "gui.MixinMinecraftClient",
     "instant_sneak.MixinCamera",
     "light_updates.MixinLevelLightEngine",
-    "optimizations.beacon_beam_rendering.LevelRendererAccessor",
-    "optimizations.beacon_beam_rendering.MixinBeaconRenderer",
-    "optimizations.beacon_beam_rendering.MixinVertexSerializerRegistryImpl",
     "particle.MixinFireworkParticle",
     "particle.MixinLevelRenderer",
     "particle.MixinParticleEngine",

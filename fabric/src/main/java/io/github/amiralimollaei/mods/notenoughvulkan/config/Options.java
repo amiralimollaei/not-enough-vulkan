@@ -351,30 +351,9 @@ public abstract class Options {
                 () -> NotEnoughVulkanClientMod.mixinConfig().getOptions().get("mixin.compat.skip_wayland_patches").isEnabled() && Platform.isWayLand()
         );
 
-        SwitchOption forceX11;
-        if (NotEnoughVulkanClientMod.mixinConfig().getOptions().get("mixin.compat.force_x11").isEnabled()) {
-            forceX11 = new SwitchOption(
-                    Component.translatable("not-enough-vulkan.option.force_x11"),
-                    (value) -> notEnoughVulkanOptions.compatSettings.forceX11 = value,
-                    () -> notEnoughVulkanOptions.compatSettings.forceX11
-            );
-        } else {
-            notEnoughVulkanOptions.compatSettings.forceX11 = false;
-            forceX11 = new SwitchOption(
-                    Component.translatable("not-enough-vulkan.option.force_x11").append(
-                            Component.translatable("not-enough-vulkan.option.deprecated")
-                    ),
-                    (value) -> notEnoughVulkanOptions.compatSettings.forceX11 = value,
-                    () -> notEnoughVulkanOptions.compatSettings.forceX11
-            );
-        }
-        forceX11.setTooltip((v) -> Component.translatable("not-enough-vulkan.option.force_x11.tooltip"));
-        forceX11.setActivationFn(
-                () -> NotEnoughVulkanClientMod.mixinConfig().getOptions().get("mixin.compat.force_x11").isEnabled() && supportsWayland()
-        );
         return new OptionBlock[]{
                 new OptionBlock("Compatibility", new Option[]{
-                        reduceResolutionOnMac, skipWaylandPatches, forceX11
+                        reduceResolutionOnMac, skipWaylandPatches
                 }),
                 new OptionBlock("Overlay", new Option[]{
                         new CyclingOption<>(
@@ -476,13 +455,6 @@ public abstract class Options {
                 }),
         };
     }
-
-    private static boolean supportsWayland() {
-        String sessionType = System.getenv("XDG_SESSION_TYPE");
-        if (sessionType == null) return false;
-        return sessionType.equalsIgnoreCase("wayland");
-    }
-
 
     public static List<OptionPage> getModOptions() {
         List<OptionPage> optionPages = new ArrayList<>();

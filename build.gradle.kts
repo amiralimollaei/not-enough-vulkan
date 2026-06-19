@@ -15,7 +15,7 @@ val PARCHMENT_VERSION by extra { null }
 val MAVEN_GROUP by extra { "io.github.amiralimollaei.mods" }
 val ARCHIVE_NAME by extra { "not-enough-vulkan" }
 val MOD_VERSION by extra { "1.6.0" }
-val VULKANMOD_VERSION by extra { "0.6.7+1.21.11" }
+val VULKANMOD_VERSION by extra { "0.6.7+1.21.1" }
 val BOBBY_VERSION by extra { "5.2.4+mc1.21" }
 
 allprojects {

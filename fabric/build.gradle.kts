@@ -46,7 +46,7 @@ dependencies {
     addEmbeddedFabricModule("fabric-resource-loader-v0")
     compileOnly(project(":common"))
 
-    add("modImplementation", "maven.modrinth:vulkanmod:$VULKANMOD_VERSION")
+    add("modCompileOnly", "maven.modrinth:vulkanmod:$VULKANMOD_VERSION")
     add("modCompileOnly", "maven.modrinth:bobby:$BOBBY_VERSION")
 }
 

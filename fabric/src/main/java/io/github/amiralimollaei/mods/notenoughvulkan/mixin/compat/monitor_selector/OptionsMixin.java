@@ -60,7 +60,7 @@ public class OptionsMixin {
                 }
         );
         monitorOption.setTooltip((v) -> Component.translatable("not-enough-vulkan.option.monitor_selector.tooltip"));
-        monitorOption.setTranslator(monitor_address -> Component.nullToEmpty(glfwGetMonitorName(monitor_address)));
+        monitorOption.setTranslator(OptionsMixin::getMonitorName);
         monitorOption.setNewValue(VideoModeManager.selectedMonitor);
 
         // update resolution Option when the screen changes
@@ -82,5 +82,14 @@ public class OptionsMixin {
             if (windowModeOption.getNewValue() != WindowMode.EXCLUSIVE_FULLSCREEN) monitorOption.resetValue();
         });
         return ArrayUtils.add(options, 1, monitorOption);
+    }
+
+    @Unique
+    private static @NotNull Component getMonitorName(Long monitor_address) {
+        try {
+            return Component.nullToEmpty(glfwGetMonitorName(monitor_address));
+        } catch (Exception e) {
+            return Component.literal("Unknown Monitor");
+        }
     }
 }

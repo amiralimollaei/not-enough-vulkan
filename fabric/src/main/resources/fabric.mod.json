@@ -59,7 +59,7 @@
   "depends": {
     "fabricloader": ">=0.18",
     "vulkanmod": ">=0.6.3",
-    "minecraft": ">=1.21.11"
+    "minecraft": ">=1.21.11 <26.1"
   },
   "breaks": {
     "vulkanmod": "<0.6.3"

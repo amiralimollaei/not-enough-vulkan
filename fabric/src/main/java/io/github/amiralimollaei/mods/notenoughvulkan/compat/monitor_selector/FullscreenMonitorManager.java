@@ -31,7 +31,7 @@ public class FullscreenMonitorManager {
     }
 
     public static void applySelectedFullscreenMonitor() {
-        NotEnoughVulkanClientMod.options().compatSettings.selectedMonitor = glfwGetMonitorName(selectedFullscreenMonitor);
+        NotEnoughVulkanClientMod.options().compatSettings.selectedMonitor = getMonitorName(selectedFullscreenMonitor);
         VideoModeManager.applySelectedVideoMode();
     }
 
@@ -44,10 +44,20 @@ public class FullscreenMonitorManager {
         if (config == null) return GLFW.glfwGetPrimaryMonitor();
         return VideoModeManager.getMonitors().keySet().stream()
                 .filter(v -> {
-                    String monitorName = glfwGetMonitorName(v);
+                    String monitorName = getMonitorName(v);
                     if (monitorName == null) return false;
                     return monitorName.equals(NotEnoughVulkanClientMod.options().compatSettings.selectedMonitor);
                 })
                 .findFirst().orElse(GLFW.glfwGetPrimaryMonitor());
+    }
+
+    private static @Nullable String getMonitorName(Long v) {
+        String monitorName;
+        try {
+            monitorName = glfwGetMonitorName(v);
+        } catch (Exception e) {
+            monitorName = "Unknown Monitor";
+        }
+        return monitorName;
     }
 }

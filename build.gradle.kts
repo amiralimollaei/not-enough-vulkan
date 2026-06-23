@@ -11,7 +11,7 @@ val FABRIC_API_VERSION by extra { "0.145.3+26.1.1" }
 // https://semver.org/
 val MAVEN_GROUP by extra { "io.github.amiralimollaei.mods" }
 val ARCHIVE_NAME by extra { "not-enough-vulkan" }
-val MOD_VERSION by extra { "1.6.0" }
+val MOD_VERSION by extra { "1.6.1" }
 val VULKANMOD_VERSION by extra { "0.6.7+26.1.2" }
 val BOBBY_VERSION by extra { "5.2.13+mc26.1" }
 

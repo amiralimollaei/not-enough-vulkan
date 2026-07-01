@@ -13,8 +13,8 @@ import org.spongepowered.asm.mixin.Mixin;
 public abstract class MixinLevelRenderer {
     @WrapMethod(method = "addCloudsPass")
     private void modifyCloudHeight(FrameGraphBuilder frame, CloudStatus cloudStatus, Vec3 cameraPosition, long gameTime, float partialTicks, int cloudColor, float cloudHeight, int cloudRange, Operation<Void> original) {
-        // todo: don't force overwrite
-        cloudHeight = SodiumExtraClientMod.options().extraSettings.cloudHeight + 0.33F;
+        if (SodiumExtraClientMod.options().extraSettings.cloudHeightOverride)
+            cloudHeight = SodiumExtraClientMod.options().extraSettings.cloudHeight + 0.33F;
         original.call(frame, cloudStatus, cameraPosition, gameTime, partialTicks, cloudColor, cloudHeight, cloudRange);
     }
 }

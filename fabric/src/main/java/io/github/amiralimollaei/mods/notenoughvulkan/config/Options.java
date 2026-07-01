@@ -2,13 +2,14 @@ package io.github.amiralimollaei.mods.notenoughvulkan.config;
 
 import io.github.amiralimollaei.mods.notenoughvulkan.client.NotEnoughVulkanClientMod;
 import me.flashyreese.mods.sodiumextra.client.SodiumExtraClientMod;
-import me.flashyreese.mods.sodiumextra.client.config.FogTypeConfig;
+import me.flashyreese.mods.sodiumextra.client.config.SodiumExtraConfigUtils;
 import me.flashyreese.mods.sodiumextra.client.config.SodiumExtraGameOptions;
-import net.minecraft.client.*;
+import me.flashyreese.mods.sodiumextra.client.fog.FogDistanceHelper;
+import net.minecraft.client.Minecraft;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
-import net.minecraft.world.level.material.FogType;
+import org.jspecify.annotations.NonNull;
 import net.vulkanmod.config.Platform;
 import net.vulkanmod.config.gui.OptionBlock;
 import net.vulkanmod.config.option.*;
@@ -156,27 +157,190 @@ public abstract class Options {
         };
     }
 
+    private static Component chunkDistanceTranslator(int v) {
+        if (v == FogDistanceHelper.FOG_DISTANCE_VANILLA) {
+            return Component.translatable("options.gamma.default");
+        } else if (FogDistanceHelper.disablesFog(v)) {
+            return Component.translatable("options.off");
+        } else {
+            return Component.translatable("options.chunks", v);
+        }
+    }
+
+    private static Component blockDistanceTranslator(int v) {
+        if (v == FogDistanceHelper.FOG_DISTANCE_VANILLA) {
+            return Component.translatable("options.gamma.default");
+        } else if (v == (FogDistanceHelper.FOG_DISTANCE_OFF * 8)) {
+            return Component.translatable("options.off");
+        } else {
+            return Component.translatable("sodium-extra.units.blocks", v);
+        }
+    }
+
     public static OptionBlock[] getRenderOpts() {
         List<OptionBlock> optionBlocks = new ArrayList<>();
 
+        SodiumExtraGameOptions.FogSettings fogSettings = fogSettings();
+        List<Identifier> dimensionFogEffectIds = getDimensionFogEffectIds(fogSettings);
+
+        var advancedFogSettingsOption = newStandardSwitchOption("advanced_fog_settings",
+                value -> sodiumExtraOptions.renderSettings.fogSettings.advanced = value,
+                () -> sodiumExtraOptions.renderSettings.fogSettings.advanced
+        );
+
+        var fogDistanceRange = FogDistanceHelper.getFogDistanceRange();
+        var fogDistanceOption = new RangeOption(Component.translatable("sodium-extra.option.fog_distance"),
+                fogDistanceRange.min, fogDistanceRange.max, fogDistanceRange.step,
+                value -> SodiumExtraClientMod.options().renderSettings.fogSettings.atmospheric.distanceChunks = value,
+                () -> SodiumExtraClientMod.options().renderSettings.fogSettings.atmospheric.distanceChunks
+        );
+        fogDistanceOption.setTooltip((v) -> Component.translatable("sodium-extra.option.fog_distance.tooltip"));
+        fogDistanceOption.setTranslator(Options::chunkDistanceTranslator);
+
+        var fogStartOption = new RangeOption(
+                Component.translatable("sodium-extra.option.fog_start"),
+                0, 100, 1,
+                SodiumExtraConfigUtils::setAtmosphericFogStart,
+                () -> SodiumExtraClientMod.options().renderSettings.fogSettings.atmospheric.startPercent
+        );
+        fogStartOption.setTooltip((v) -> Component.translatable("sodium-extra.option.fog_start.tooltip"));
+
         optionBlocks.add(new OptionBlock("", new Option[]{
-                newStandardSwitchOption("global_fog",
-                        value -> sodiumExtraOptions.renderSettings.globalFog = value,
-                        () -> sodiumExtraOptions.renderSettings.globalFog
-                )
+                advancedFogSettingsOption,
+                fogDistanceOption,
+                fogStartOption
         }));
 
-        Arrays.stream(FogType.values())
-                .sorted(Comparator.comparing(Enum::name))
-                .filter(type -> type != FogType.NONE)
-                .forEach(fogtype -> optionBlocks.add(Options.newFogRenderOptionBlock(fogtype)));
+        var multiDimensionFogOption = newStandardSwitchOption(
+                "multi_dimension_fog",
+                value -> SodiumExtraClientMod.options().renderSettings.fogSettings.multiDimensionFogControl = value,
+                () -> SodiumExtraClientMod.options().renderSettings.fogSettings.multiDimensionFogControl
+        );
+        multiDimensionFogOption.setActivationFn(advancedFogSettingsOption::getNewValue);
 
-        optionBlocks.add(new OptionBlock("Light Updates", new Option[]{
-                newStandardSwitchOption("light_updates",
-                        value -> sodiumExtraOptions.renderSettings.lightUpdates = value,
-                        () -> sodiumExtraOptions.renderSettings.lightUpdates
-                )
+        var fogShapeOption = new CyclingOption<>(
+                Component.translatable("sodium-extra.option.fog_shape"),
+                SodiumExtraGameOptions.FogShapeMode.values(),
+                SodiumExtraConfigUtils::setAtmosphericFogShape,
+                () -> SodiumExtraClientMod.options().renderSettings.fogSettings.atmospheric.shapeMode
+        );
+        fogShapeOption.setTooltip((v) -> Component.translatable("sodium-extra.option.fog_shape.tooltip"));
+        fogShapeOption.setTranslator(SodiumExtraGameOptions.FogShapeMode::getLocalizedName);
+        fogShapeOption.setActivationFn(advancedFogSettingsOption::getNewValue);
+
+        var skyFogOption = newStandardSwitchOption(
+                "sky_fog",
+                SodiumExtraConfigUtils::setAtmosphericSkyFog,
+                () -> SodiumExtraClientMod.options().renderSettings.fogSettings.atmospheric.affectSkyFog
+        );
+        skyFogOption.setActivationFn(advancedFogSettingsOption::getNewValue);
+
+        var cloudFogOption = newStandardSwitchOption(
+                "cloud_fog",
+                SodiumExtraConfigUtils::setAtmosphericCloudFog,
+                () -> SodiumExtraClientMod.options().renderSettings.fogSettings.atmospheric.affectCloudFog
+        );
+        cloudFogOption.setActivationFn(advancedFogSettingsOption::getNewValue);
+
+        fogDistanceOption.setActivationFn(() -> !multiDimensionFogOption.getNewValue());
+
+        optionBlocks.add(new OptionBlock("", new Option[]{
+                multiDimensionFogOption,
+                fogShapeOption,
+                skyFogOption,
+                cloudFogOption
         }));
+
+        var dimensionFogOptions = new RangeOption[dimensionFogEffectIds.size()];
+        var i = 0;
+        for (var identifier: dimensionFogEffectIds) {
+            dimensionFogOptions[i] = newDistanceFogOption(
+                    Component.translatable("sodium-extra.option.fog", translatableName(identifier, "dimensions").getString()),
+                    Component.translatable("sodium-extra.option.fog.tooltip"),
+                    () -> multiDimensionFogOption.getNewValue() && advancedFogSettingsOption.getNewValue(), fogDistanceRange,
+                    value -> SodiumExtraClientMod.options().renderSettings.fogSettings.getOrCreateDimensionOverride(identifier).distanceChunks = value,
+                    () -> SodiumExtraClientMod.options().renderSettings.fogSettings.getOrCreateDimensionOverride(identifier).distanceChunks
+            );
+            i++;
+        }
+        optionBlocks.add(new OptionBlock("", dimensionFogOptions));
+
+        multiDimensionFogOption.setOnChange(() -> {
+            fogDistanceOption.updateActiveState();
+
+            for (var option: dimensionFogOptions) {
+                option.updateActiveState();
+            }
+        });
+
+        var protectedGameplayFogOption = newStandardSwitchOption(
+                "protected_gameplay_fog",
+                value -> SodiumExtraClientMod.options().renderSettings.fogSettings.protectedGameplay.enabledWhenAllowed = value,
+                () -> SodiumExtraClientMod.options().renderSettings.fogSettings.protectedGameplay.enabledWhenAllowed
+        );
+        protectedGameplayFogOption.setActivationFn(advancedFogSettingsOption::getNewValue);
+
+        var protectedGameplayFogOptions = new ArrayList<RangeOption>();
+        Supplier<Boolean> protectedGameplayFogOptionsActivationFn = () -> protectedGameplayFogOption.getNewValue() && advancedFogSettingsOption.getNewValue();
+        protectedGameplayFogOptions.add(newProtectedGameplayFogOption(
+                "blindness", protectedGameplayFogOptionsActivationFn, fogDistanceRange,
+                value -> SodiumExtraClientMod.options().renderSettings.fogSettings.protectedGameplay.blindnessDistanceBlocks = value >= 0 ? value : -1,
+                () -> SodiumExtraClientMod.options().renderSettings.fogSettings.protectedGameplay.blindnessDistanceBlocks
+        ));
+        protectedGameplayFogOptions.add(newProtectedGameplayFogOption(
+                "darkness", protectedGameplayFogOptionsActivationFn, fogDistanceRange,
+                value -> SodiumExtraClientMod.options().renderSettings.fogSettings.protectedGameplay.darknessDistanceBlocks = value >= 0 ? value : -1,
+                () -> SodiumExtraClientMod.options().renderSettings.fogSettings.protectedGameplay.darknessDistanceBlocks
+        ));
+        protectedGameplayFogOptions.add(newProtectedGameplayFogOption(
+                "lava", protectedGameplayFogOptionsActivationFn, fogDistanceRange,
+                value -> SodiumExtraClientMod.options().renderSettings.fogSettings.protectedGameplay.lavaDistanceBlocks = value >= 0 ? value : -1,
+                () -> SodiumExtraClientMod.options().renderSettings.fogSettings.protectedGameplay.lavaDistanceBlocks
+        ));
+        protectedGameplayFogOptions.add(newProtectedGameplayFogOption(
+                "powder_snow", protectedGameplayFogOptionsActivationFn, fogDistanceRange,
+                value -> SodiumExtraClientMod.options().renderSettings.fogSettings.protectedGameplay.powderSnowDistanceBlocks = value >= 0 ? value : -1,
+                () -> SodiumExtraClientMod.options().renderSettings.fogSettings.protectedGameplay.powderSnowDistanceBlocks
+        ));
+        protectedGameplayFogOptions.add(newProtectedGameplayFogOption(
+                "water", protectedGameplayFogOptionsActivationFn, fogDistanceRange,
+                value -> SodiumExtraClientMod.options().renderSettings.fogSettings.protectedGameplay.waterDistanceBlocks = value >= 0 ? value : -1,
+                () -> SodiumExtraClientMod.options().renderSettings.fogSettings.protectedGameplay.waterDistanceBlocks
+        ));
+
+        protectedGameplayFogOption.setOnChange(() -> {
+            for (var option: protectedGameplayFogOptions) {
+                option.updateActiveState();
+            }
+        });
+
+        advancedFogSettingsOption.setOnChange(() -> {
+            multiDimensionFogOption.updateActiveState();
+            fogShapeOption.updateActiveState();
+            skyFogOption.updateActiveState();
+            cloudFogOption.updateActiveState();
+
+            fogDistanceOption.updateActiveState();
+
+            for (var option: dimensionFogOptions) {
+                option.updateActiveState();
+            }
+
+            protectedGameplayFogOption.updateActiveState();
+
+            for (var option: protectedGameplayFogOptions) {
+                option.updateActiveState();
+            }
+        });
+
+        var protectedGameplayFogBlocksOptions = new Option[protectedGameplayFogOptions.size() + 1];
+        protectedGameplayFogBlocksOptions[0] = protectedGameplayFogOption;
+        i = 1;
+        for (var option: protectedGameplayFogOptions) {
+            protectedGameplayFogBlocksOptions[i] = option;
+            i ++;
+        }
+        optionBlocks.add(new OptionBlock("", protectedGameplayFogBlocksOptions));
 
         optionBlocks.add(new OptionBlock("Render", new Option[]{
                 new SwitchOption(
@@ -238,97 +402,30 @@ public abstract class Options {
         return optionBlockArray;
     }
 
-    private static OptionBlock newFogRenderOptionBlock(FogType fogType) {
-        // Environment Start
-        RangeOption envStart = new RangeOption(
-                Component.translatable("sodium-extra.option.fog_type.environment_start", fogTypeName(fogType)),
-                0, 300, 1,
-                val -> {
-                    FogTypeConfig ftconfig = sodiumExtraOptions.renderSettings.fogTypeConfig.computeIfAbsent(fogType, k -> new FogTypeConfig());
-                    ftconfig.environmentStartMultiplier = val;
-                },
-                () -> sodiumExtraOptions.renderSettings.fogTypeConfig.computeIfAbsent(fogType, k -> new FogTypeConfig()).environmentStartMultiplier
-        );
-        envStart.setTooltip((v) -> Component.translatable("sodium-extra.option.fog_type.environment_start.tooltip"));
+    private static @NonNull RangeOption newProtectedGameplayFogOption(String key, Supplier<Boolean> activationFn, FogDistanceHelper.Range fogDistanceRange, Consumer<Integer> setter, Supplier<Integer> getter) {
+        var option = new RangeOption(
+                Component.translatable("sodium-extra.option.protected_gameplay_fog."+key),
+                FogDistanceHelper.FOG_DISTANCE_OFF * 8, fogDistanceRange.max * 16, 8,
+                setter, getter
 
-        // Environment End
-        RangeOption envEnd = new RangeOption(
-                Component.translatable("sodium-extra.option.fog_type.environment_end", fogTypeName(fogType)),
-                0, 300, 1,
-                val -> {
-                    FogTypeConfig ftconfig = sodiumExtraOptions.renderSettings.fogTypeConfig.computeIfAbsent(fogType, k -> new FogTypeConfig());
-                    ftconfig.environmentEndMultiplier = val;
-                },
-                () -> sodiumExtraOptions.renderSettings.fogTypeConfig.computeIfAbsent(fogType, k -> new FogTypeConfig()).environmentEndMultiplier
         );
-        envEnd.setTooltip((v) -> Component.translatable("sodium-extra.option.fog_type.environment_end.tooltip"));
+        option.setTooltip((v) -> Component.translatable("sodium-extra.option.protected_gameplay_fog."+key+".tooltip"));
+        option.setTranslator(Options::blockDistanceTranslator);
+        option.setActivationFn(activationFn);
+        return option;
+    }
 
-        // Render Start
-        RangeOption renderStart = new RangeOption(
-                Component.translatable("sodium-extra.option.fog_type.render_distance_start", fogTypeName(fogType)),
-                0, 300, 1,
-                val -> {
-                    FogTypeConfig ftconfig = sodiumExtraOptions.renderSettings.fogTypeConfig.computeIfAbsent(fogType, k -> new FogTypeConfig());
-                    ftconfig.renderDistanceStartMultiplier = val;
-                },
-                () -> sodiumExtraOptions.renderSettings.fogTypeConfig.computeIfAbsent(fogType, k -> new FogTypeConfig()).renderDistanceStartMultiplier
+    private static @NonNull RangeOption newDistanceFogOption(Component name, Component tooltip, Supplier<Boolean> activationFn, FogDistanceHelper.Range fogDistanceRange, Consumer<Integer> setter, Supplier<Integer> getter) {
+        var option = new RangeOption(
+                name,
+                FogDistanceHelper.FOG_DISTANCE_OFF, fogDistanceRange.max, 1,
+                setter, getter
+
         );
-        renderStart.setTooltip((v) -> Component.translatable("sodium-extra.option.fog_type.render_distance_start.tooltip"));
-
-        // Render End
-        RangeOption renderEnd = new RangeOption(
-                Component.translatable("sodium-extra.option.fog_type.render_distance_end", fogTypeName(fogType)),
-                0, 300, 1,
-                val -> {
-                    FogTypeConfig ftconfig = sodiumExtraOptions.renderSettings.fogTypeConfig.computeIfAbsent(fogType, k -> new FogTypeConfig());
-                    ftconfig.renderDistanceEndMultiplier = val;
-                },
-                () -> sodiumExtraOptions.renderSettings.fogTypeConfig.computeIfAbsent(fogType, k -> new FogTypeConfig()).renderDistanceEndMultiplier
-        );
-        renderEnd.setTooltip((v) -> Component.translatable("sodium-extra.option.fog_type.render_distance_end.tooltip"));
-
-        // Sky End
-        RangeOption skyEnd = new RangeOption(
-                Component.translatable("sodium-extra.option.fog_type.sky_end", fogTypeName(fogType)),
-                0, 300, 1,
-                val -> {
-                    FogTypeConfig ftconfig = sodiumExtraOptions.renderSettings.fogTypeConfig.computeIfAbsent(fogType, k -> new FogTypeConfig());
-                    ftconfig.skyEndMultiplier = val;
-                },
-                () -> sodiumExtraOptions.renderSettings.fogTypeConfig.computeIfAbsent(fogType, k -> new FogTypeConfig()).skyEndMultiplier
-        );
-        skyEnd.setTooltip((v) -> Component.translatable("sodium-extra.option.fog_type.sky_end.tooltip"));
-
-        // Sky End
-        RangeOption cloudEnd = new RangeOption(
-                Component.translatable("sodium-extra.option.fog_type.cloud_end", fogTypeName(fogType)),
-                0, 300, 1,
-                val -> {
-                    FogTypeConfig ftconfig = sodiumExtraOptions.renderSettings.fogTypeConfig.computeIfAbsent(fogType, k -> new FogTypeConfig());
-                    ftconfig.cloudEndMultiplier = val;
-                },
-                () -> sodiumExtraOptions.renderSettings.fogTypeConfig.computeIfAbsent(fogType, k -> new FogTypeConfig()).cloudEndMultiplier
-        );
-        cloudEnd.setTooltip((v) -> Component.translatable("sodium-extra.option.fog_type.cloud_end.tooltip"));
-
-        SwitchOption all = new SwitchOption(
-                fogTypeName(fogType),
-                (val) -> sodiumExtraOptions.renderSettings.fogTypeConfig.computeIfAbsent(fogType, k -> new FogTypeConfig()).enable = val,
-                () -> sodiumExtraOptions.renderSettings.fogTypeConfig.computeIfAbsent(fogType, k -> new FogTypeConfig()).enable
-        );
-        all.setTooltip((v) -> fogTypeTooltip(fogType));
-
-        // Add group
-        return new OptionBlock(
-                "Fog Type: " + fogType.name(), new Option[]{
-                all,
-                envStart,
-                envEnd,
-                renderStart,
-                renderEnd,
-                skyEnd,
-                cloudEnd
-        });
+        option.setTooltip((v) -> tooltip);
+        option.setTranslator(Options::chunkDistanceTranslator);
+        option.setActivationFn(activationFn);
+        return option;
     }
 
     public static OptionBlock[] getExtrasOpts() {
@@ -435,7 +532,7 @@ public abstract class Options {
                                 Component.translatable("sodium-extra.option.prevent_shaders"),
                                 (value) -> {
                                     sodiumExtraOptions.extraSettings.preventShaders = value;
-                                    minecraft.levelRenderer.allChanged();
+                                    minecraft.levelExtractor.allChanged();
                                 },
                                 () -> sodiumExtraOptions.extraSettings.preventShaders
                         ).setTooltip((v) -> Component.translatable("sodium-extra.option.prevent_shaders.tooltip"))

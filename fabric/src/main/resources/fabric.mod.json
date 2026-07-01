@@ -38,6 +38,9 @@
     "client": [
       "me.flashyreese.mods.sodiumextra.SodiumExtraFabricClientModInitializer",
       "io.github.amiralimollaei.mods.notenoughvulkan.NotEnoughVulkanModInitializer"
+    ],
+    "preLaunch": [
+      "me.flashyreese.mods.sodiumextra.SodiumExtraFabricPreLaunch"
     ]
   },
   "custom": {
@@ -58,9 +61,9 @@
     "not-enough-vulkan.mixins.json"
   ],
   "depends": {
-    "fabricloader": ">=0.18",
+    "fabricloader": ">=0.19",
     "vulkanmod": ">=0.6.3",
-    "minecraft": ">=26.1 <26.2"
+    "minecraft": ">=26.2 <26.3"
   },
   "breaks": {
     "vulkanmod": "<0.6.3"

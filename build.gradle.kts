@@ -1,19 +1,19 @@
 plugins {
     id("java")
-    id("net.fabricmc.fabric-loom") version ("1.15.4") apply (false)
+    id("net.fabricmc.fabric-loom") version ("1.17.11") apply (false)
 }
 
-val MINECRAFT_VERSION by extra { "26.1.1" }
-val NEOFORGE_VERSION by extra { "26.1.1.2-beta" }
-val FABRIC_LOADER_VERSION by extra { "0.18.6" }
-val FABRIC_API_VERSION by extra { "0.145.3+26.1.1" }
+val MINECRAFT_VERSION by extra { "26.2" }
+val NEOFORGE_VERSION by extra { "26.2.0.1-beta" }
+val FABRIC_LOADER_VERSION by extra { "0.19.3" }
+val FABRIC_API_VERSION by extra { "0.152.1+26.2" }
 
 // https://semver.org/
 val MAVEN_GROUP by extra { "io.github.amiralimollaei.mods" }
 val ARCHIVE_NAME by extra { "not-enough-vulkan" }
 val MOD_VERSION by extra { "1.6.1" }
-val VULKANMOD_VERSION by extra { "0.6.7+26.1.2" }
-val BOBBY_VERSION by extra { "5.2.13+mc26.1" }
+val VULKANMOD_VERSION by extra { "0.6.9+26.1.2" }
+val BOBBY_VERSION by extra { "5.2.14+mc26.2" }
 
 allprojects {
     apply(plugin = "java")
@@ -27,6 +27,8 @@ tasks.withType<JavaCompile> {
 }
 
 subprojects {
+    val modVersion = createVersionString()
+
     apply(plugin = "maven-publish")
 
     repositories {
@@ -42,7 +44,13 @@ subprojects {
 
     java.toolchain.languageVersion = JavaLanguageVersion.of(25)
 
-    version = createVersionString()
+    tasks.processResources {
+        filesMatching("META-INF/neoforge.mods.toml") {
+            expand(mapOf("version" to modVersion))
+        }
+    }
+
+    version = modVersion
     group = MAVEN_GROUP
 
     tasks.withType<JavaCompile> {

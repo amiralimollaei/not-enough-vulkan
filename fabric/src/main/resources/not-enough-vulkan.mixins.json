@@ -12,7 +12,8 @@
     "compat.monitor_selector.VideoModeManagerMixin",
     "compat.skip_wayland_patches.InputConstantsMMixin",
     "compat.skip_wayland_patches.MinecraftMixinSquared",
-    "core.enhance_vk_options.ModIconWidgetMixin"
+    "core.enhance_vk_options.ModIconWidgetMixin",
+    "core.config.AccessorRangeOption"
   ],
   "injectors": {
     "defaultRequire": 1

@@ -1,7 +1,7 @@
 plugins {
     id("java")
     id("idea")
-    id("net.fabricmc.fabric-loom") version ("1.15.4")
+    id("net.fabricmc.fabric-loom") version ("1.17.11")
 }
 
 val MINECRAFT_VERSION: String by rootProject.extra
@@ -20,7 +20,9 @@ base {
 
 dependencies {
     minecraft("com.mojang:minecraft:${MINECRAFT_VERSION}")
-    implementation("net.fabricmc:fabric-loader:$FABRIC_LOADER_VERSION")
+    compileOnly("net.fabricmc:fabric-loader:$FABRIC_LOADER_VERSION")
+    runtimeOnly("net.fabricmc:fabric-loader:$FABRIC_LOADER_VERSION")
+    testCompileOnly("net.fabricmc:fabric-loader:$FABRIC_LOADER_VERSION")
 
     include("com.github.bawnorton.mixinsquared:mixinsquared-fabric:0.3.7-beta.2")
     implementation("com.github.bawnorton.mixinsquared:mixinsquared-fabric:0.3.7-beta.2")
@@ -37,7 +39,8 @@ dependencies {
     addEmbeddedFabricModule("fabric-rendering-v1")
 
     compileOnly(project(":common"))
-    implementation("maven.modrinth:vulkanmod:$VULKANMOD_VERSION")
+    //implementation("maven.modrinth:vulkanmod:$VULKANMOD_VERSION")
+    implementation(files("run/mods/VulkanMod-0.6.9-dev.0+26.2.jar"))
     implementation("maven.modrinth:bobby:$BOBBY_VERSION")
 }
 
@@ -48,24 +51,23 @@ tasks.test {
 loom {
     accessWidenerPath.set(project(":common").file("src/main/resources/sodium-extra.accesswidener"))
 
-    @Suppress("UnstableApiUsage")
-    mixin { defaultRefmapName.set("${rootProject.name}.refmap.json") }
-
     runs {
         named("client") {
             client()
-            configName = "Fabric Client"
-            ideConfigGenerated(true)
-            runDir("run")
+            displayName.set("Fabric Client")
+            generateRunConfig.set(true)
+            runDirectory.set(layout.projectDirectory.dir("run"))
         }
         named("server") {
             server()
-            configName = "Fabric Server"
-            ideConfigGenerated(true)
-            runDir("run")
+            displayName.set("Fabric Server")
+            generateRunConfig.set(true)
+            runDirectory.set(layout.projectDirectory.dir("run"))
         }
     }
 }
+
+val modVersion = project.version.toString()
 
 tasks {
     withType<JavaCompile> {
@@ -77,10 +79,10 @@ tasks {
     processResources {
         from(project(":common").sourceSets.main.get().resources)
 
-        inputs.property("version", project.version)
+        inputs.property("version", modVersion)
 
         filesMatching("fabric.mod.json") {
-            expand(mapOf("version" to project.version))
+            expand(mapOf("version" to modVersion))
         }
     }
 
@@ -119,4 +121,5 @@ tasks.named("validateAccessWidener").configure {
             }
         }
     }
-}*/
+}
+*/

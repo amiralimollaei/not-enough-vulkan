@@ -14,7 +14,7 @@ val PARCHMENT_VERSION by extra { null }
 // https://semver.org/
 val MAVEN_GROUP by extra { "io.github.amiralimollaei.mods" }
 val ARCHIVE_NAME by extra { "not-enough-vulkan" }
-val MOD_VERSION by extra { "1.6.1" }
+val MOD_VERSION by extra { "1.6.2" }
 val VULKANMOD_VERSION by extra { "0.6.7+1.21.11" }
 val BOBBY_VERSION by extra { "5.2.11+mc1.21.11" }
 

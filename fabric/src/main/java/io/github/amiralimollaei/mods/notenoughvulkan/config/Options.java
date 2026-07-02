@@ -142,8 +142,8 @@ public abstract class Options {
                                 () -> sodiumExtraOptions.detailSettings.moon
                         ),
                         new SwitchOption(parseVanillaString("soundCategory.weather"),
-                                value -> sodiumExtraOptions.detailSettings.sky = value,
-                                () -> sodiumExtraOptions.detailSettings.sky
+                                value -> sodiumExtraOptions.detailSettings.rainSnow = value,
+                                () -> sodiumExtraOptions.detailSettings.rainSnow
                         ).setTooltip((v) -> Component.translatable("sodium-extra.option.rain_snow.tooltip")),
                         newStandardSwitchOption("biome_colors",
                                 value -> sodiumExtraOptions.detailSettings.biomeColors = value,

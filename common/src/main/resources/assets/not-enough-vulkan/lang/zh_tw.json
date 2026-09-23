@@ -1,0 +1,6 @@
+{
+  "not-enough-vulkan.option.skip_wayland_patches": "跳過 Wayland 修補程式",
+  "not-enough-vulkan.option.skip_wayland_patches.tooltip": "跳過 Linux 上的 Wayland 相容性修補程式，以啟用自訂的 GLFW 解決方案（僅在使用 Wayland 時可用），某些效果需要重新啟動遊戲。",
+  "not-enough-vulkan.option.monitor_selector": "全螢幕顯示器",
+  "not-enough-vulkan.option.monitor_selector.tooltip": "遊戲處於全螢幕模式時將使用的顯示器"
+}

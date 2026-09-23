@@ -2,12 +2,12 @@ package me.flashyreese.mods.sodiumextra.common.util;
 
 import com.mojang.blaze3d.platform.Monitor;
 import me.flashyreese.mods.sodiumextra.client.fog.FogDistanceHelper;
-import net.caffeinemc.mods.sodium.api.config.option.ControlValueFormatter;
+import io.github.amiralimollaei.mods.notenoughvulkan.config.vk.ValueFormatter;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 
-public interface ControlValueFormatterExtended extends ControlValueFormatter {
-    static ControlValueFormatter resolution() {
+public interface ControlValueFormatterExtended extends ValueFormatter {
+    static ValueFormatter resolution() {
         return (v) -> {
             Monitor monitor = Minecraft.getInstance().getWindow().findBestMonitor();
             if (monitor == null || monitor.modeCount() <= 0) {
@@ -19,7 +19,7 @@ public interface ControlValueFormatterExtended extends ControlValueFormatter {
         };
     }
 
-    static ControlValueFormatter fogDistance() {
+    static ValueFormatter fogDistance() {
         return (v) -> {
             if (v == FogDistanceHelper.FOG_DISTANCE_VANILLA) {
                 return Component.translatable("options.gamma.default");
@@ -31,7 +31,7 @@ public interface ControlValueFormatterExtended extends ControlValueFormatter {
         };
     }
 
-    static ControlValueFormatter protectedFogDistance() {
+    static ValueFormatter protectedFogDistance() {
         return (v) -> {
             if (v == FogDistanceHelper.FOG_DISTANCE_VANILLA) {
                 return Component.translatable("options.gamma.default");
@@ -43,7 +43,7 @@ public interface ControlValueFormatterExtended extends ControlValueFormatter {
         };
     }
 
-    static ControlValueFormatter ticks() {
+    static ValueFormatter ticks() {
         return (v) -> Component.translatable("sodium-extra.units.ticks", v);
     }
 }

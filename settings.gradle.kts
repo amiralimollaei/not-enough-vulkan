@@ -1,4 +1,4 @@
-rootProject.name = "sodium-extra"
+rootProject.name = "not-enough-vulkan"
 
 pluginManagement {
     repositories {

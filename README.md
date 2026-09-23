@@ -1,5 +1,5 @@
-# Sodium Extra
-![Java 17](https://img.shields.io/badge/language-Java%2017-9b599a.svg?style=flat-square)
+# Not Enough Vulkan
+![Java 25](https://img.shields.io/badge/language-Java%2025-9b599a.svg?style=flat-square)
 [![Project License](https://img.shields.io/github/license/FlashyReese/sodium-extra-fabric?style=flat-square)](LICENSE.txt)
 ![Environment: Client](https://img.shields.io/badge/environment-client-1976d2?style=flat-square)
 ![Mod loader: Fabric](https://img.shields.io/badge/modloader-Fabric-1976d2?style=flat-square&logo=data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAACXBIWXMAAAsTAAALEwEAmpwYAAAFHGlUWHRYTUw6Y29tLmFkb2JlLnhtcAAAAAAAPD94cGFja2V0IGJlZ2luPSLvu78iIGlkPSJXNU0wTXBDZWhpSHpyZVN6TlRjemtjOWQiPz4gPHg6eG1wbWV0YSB4bWxuczp4PSJhZG9iZTpuczptZXRhLyIgeDp4bXB0az0iQWRvYmUgWE1QIENvcmUgNS42LWMxNDIgNzkuMTYwOTI0LCAyMDE3LzA3LzEzLTAxOjA2OjM5ICAgICAgICAiPiA8cmRmOlJERiB4bWxuczpyZGY9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkvMDIvMjItcmRmLXN5bnRheC1ucyMiPiA8cmRmOkRlc2NyaXB0aW9uIHJkZjphYm91dD0iIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtbG5zOmRjPSJodHRwOi8vcHVybC5vcmcvZGMvZWxlbWVudHMvMS4xLyIgeG1sbnM6cGhvdG9zaG9wPSJodHRwOi8vbnMuYWRvYmUuY29tL3Bob3Rvc2hvcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RFdnQ9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZUV2ZW50IyIgeG1wOkNyZWF0b3JUb29sPSJBZG9iZSBQaG90b3Nob3AgQ0MgMjAxOCAoV2luZG93cykiIHhtcDpDcmVhdGVEYXRlPSIyMDE4LTEyLTE2VDE2OjU0OjE3LTA4OjAwIiB4bXA6TW9kaWZ5RGF0ZT0iMjAxOS0wNy0yOFQyMToxNzo0OC0wNzowMCIgeG1wOk1ldGFkYXRhRGF0ZT0iMjAxOS0wNy0yOFQyMToxNzo0OC0wNzowMCIgZGM6Zm9ybWF0PSJpbWFnZS9wbmciIHBob3Rvc2hvcDpDb2xvck1vZGU9IjMiIHBob3Rvc2hvcDpJQ0NQcm9maWxlPSJzUkdCIElFQzYxOTY2LTIuMSIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDowZWRiMWMyYy1mZjhjLWU0NDEtOTMxZi00OTVkNGYxNGM3NjAiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6MGVkYjFjMmMtZmY4Yy1lNDQxLTkzMWYtNDk1ZDRmMTRjNzYwIiB4bXBNTTpPcmlnaW5hbERvY3VtZW50SUQ9InhtcC5kaWQ6MGVkYjFjMmMtZmY4Yy1lNDQxLTkzMWYtNDk1ZDRmMTRjNzYwIj4gPHhtcE1NOkhpc3Rvcnk+IDxyZGY6U2VxPiA8cmRmOmxpIHN0RXZ0OmFjdGlvbj0iY3JlYXRlZCIgc3RFdnQ6aW5zdGFuY2VJRD0ieG1wLmlpZDowZWRiMWMyYy1mZjhjLWU0NDEtOTMxZi00OTVkNGYxNGM3NjAiIHN0RXZ0OndoZW49IjIwMTgtMTItMTZUMTY6NTQ6MTctMDg6MDAiIHN0RXZ0OnNvZnR3YXJlQWdlbnQ9IkFkb2JlIFBob3Rvc2hvcCBDQyAyMDE4IChXaW5kb3dzKSIvPiA8L3JkZjpTZXE+IDwveG1wTU06SGlzdG9yeT4gPC9yZGY6RGVzY3JpcHRpb24+IDwvcmRmOlJERj4gPC94OnhtcG1ldGE+IDw/eHBhY2tldCBlbmQ9InIiPz4/HiGMAAAAtUlEQVRYw+XXrQqAMBQF4D2P2eBL+QIG8RnEJFaNBjEum+0+zMQLtwwv+wV3ZzhhMDgfJ0wUSinxZUQWgKos1JP/AbD4OneIDyQPwCFniA+EJ4CaXm4TxAXCC0BNHgLhAdAnx9hC8PwGSRtAFVMQjF7cNTWED8B1cgwW20yfJgAvrssAsZ1cB3g/xckAxr6FmCDU5N6f488BrpCQ4rQBJkiMYh4ACmLzwOQF0CExinkCsvw7vgGikl+OotaKRwAAAABJRU5ErkJggg==)
@@ -7,7 +7,11 @@
 [![CurseForge](http://cf.way2muchnoise.eu/title/447673.svg)](https://www.curseforge.com/minecraft/mc-mods/sodium-extra)
 [![Support Server](https://img.shields.io/discord/748363294749753484.svg?color=7289da&label=FlashyReese&logo=discord&style=flat-square)](https://flashyreese.me/discord)
 
-Features that shouldn't be in Sodium.
+A VulkanMod adaptation of Sodium Extra for Minecraft 26.2, targeting Fabric and NeoForge.
+The Fabric module is runtime-supported. The NeoForge module is compile-supported only: VulkanMod
+does not currently provide a NeoForge 26.2 build, so the NeoForge artifact cannot launch by itself.
+
+Based on [Sodium Extra](https://github.com/FlashyReese/sodium-extra).
 
 ## Protected gameplay fog
 Protected Gameplay Fog changes blindness, darkness, lava, powder snow, and water fog.
@@ -22,13 +26,13 @@ a server resource pack and the [Greenlight](https://modrinth.com/mod/greenlight)
 
 ## Building from source
 ### Prerequisites
-- Java Development Kit 17 or above
+- Java Development Kit 25
 - Git
 ### Compiling
 1. Clone the repository and navigate into the cloned repository.
    ```
-   git clone https://github.com/FlashyReese/sodium-extra-fabric.git
-   cd sodium-extra-fabric
+   git clone https://github.com/amiralimollaei/not-enough-vulkan.git
+   cd not-enough-vulkan
    ```
 2. Navigate to the directory you've cloned this repository and launch a build with Gradle. If you are not using the Gradle wrapper, simply replace `gradlew` with `gradle` or the path to it.
    - Windows
@@ -39,7 +43,7 @@ a server resource pack and the [Greenlight](https://modrinth.com/mod/greenlight)
    ```
    ./gradlew build
    ```
-3. The initial setup may take a few minutes. After Gradle has finished building everything, you can find the resulting artifacts in `build/libs`.
+3. The initial setup may take a few minutes. After Gradle has finished building everything, the Fabric artifact is in `fabric/build/libs` and the compile-only NeoForge artifact is in `neoforge/build/libs`.
 
 ## Contributing to localization
 **By submitting translations, you are agreeing to have them licensed under the [Creative Commons Zero (CC0)](https://creativecommons.org/share-your-work/public-domain/cc0/) license.**

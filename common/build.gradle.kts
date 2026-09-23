@@ -3,16 +3,16 @@ import net.fabricmc.loom.task.AbstractRemapJarTask
 plugins {
     id("java")
     id("idea")
-    id("net.fabricmc.fabric-loom") version "1.17.13"
+    id("net.fabricmc.fabric-loom")
 }
 
 val MINECRAFT_VERSION: String by rootProject.extra
-val PARCHMENT_VERSION: String? by rootProject.extra
 val FABRIC_LOADER_VERSION: String by rootProject.extra
 val FABRIC_API_VERSION: String by rootProject.extra
 
-val SODIUM_VERSION: String by rootProject.extra
+val VULKANMOD_VERSION: String by rootProject.extra
 val GREENLIGHT_VERSION: String by rootProject.extra
+val BOBBY_VERSION: String by rootProject.extra
 
 dependencies {
     minecraft("com.mojang:minecraft:$MINECRAFT_VERSION")
@@ -30,8 +30,15 @@ dependencies {
     addDependentFabricModule("fabric-block-getter-api-v2")
     addDependentFabricModule("fabric-rendering-v1")
 
-    implementation("net.caffeinemc:sodium-fabric:$SODIUM_VERSION")
+    compileOnly("maven.modrinth:vulkanmod:$VULKANMOD_VERSION")
     compileOnly("me.flashyreese.mods:greenlight-api:$GREENLIGHT_VERSION")
+
+    compileOnly("com.github.bawnorton.mixinsquared:mixinsquared-fabric:0.3.7-beta.2")
+    annotationProcessor("com.github.bawnorton.mixinsquared:mixinsquared-fabric:0.3.7-beta.2")
+    compileOnly("org.jspecify:jspecify:1.0.0")
+    compileOnly("org.apache.commons:commons-lang3:3.18.0")
+    compileOnly("net.java.dev.jna:jna-platform:5.17.0")
+    compileOnly("maven.modrinth:bobby:$BOBBY_VERSION")
 }
 
 tasks.withType<AbstractRemapJarTask>().forEach {
@@ -43,7 +50,7 @@ tasks.named("compileJava") {
 }
 
 loom {
-    accessWidenerPath = file("src/main/resources/${rootProject.name}.accesswidener")
+    accessWidenerPath = file("src/main/resources/sodium-extra.accesswidener")
 }
 
 publishing {

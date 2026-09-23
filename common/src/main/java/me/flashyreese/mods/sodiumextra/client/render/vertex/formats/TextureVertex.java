@@ -2,7 +2,6 @@ package me.flashyreese.mods.sodiumextra.client.render.vertex.formats;
 
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.VertexFormat;
-import net.caffeinemc.mods.sodium.api.math.MatrixHelper;
 import org.joml.Matrix4f;
 import org.lwjgl.system.MemoryUtil;
 
@@ -15,9 +14,9 @@ public class TextureVertex {
     private static final int OFFSET_TEXTURE = 12;
 
     public static void write(long ptr, Matrix4f matrix, float x, float y, float z, float u, float v) {
-        float xt = MatrixHelper.transformPositionX(matrix, x, y, z);
-        float yt = MatrixHelper.transformPositionY(matrix, x, y, z);
-        float zt = MatrixHelper.transformPositionZ(matrix, x, y, z);
+        float xt = matrix.m00() * x + (matrix.m10() * y + (matrix.m20() * z + matrix.m30()));
+        float yt = matrix.m01() * x + (matrix.m11() * y + (matrix.m21() * z + matrix.m31()));
+        float zt = matrix.m02() * x + (matrix.m12() * y + (matrix.m22() * z + matrix.m32()));
 
         write(ptr, xt, yt, zt, u, v);
     }

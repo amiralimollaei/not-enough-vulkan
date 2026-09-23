@@ -10,10 +10,11 @@ val FABRIC_API_VERSION by extra { "0.152.1+26.2" }
 
 // https://semver.org/
 val MAVEN_GROUP by extra { "me.flashyreese.mods" }
-val ARCHIVE_NAME by extra { "sodium-extra" }
-val MOD_VERSION by extra { "0.9.3" }
-val SODIUM_VERSION by extra { "0.9.1+mc26.2" }
+val ARCHIVE_NAME by extra { "not-enough-vulkan" }
+val MOD_VERSION by extra { "1.7.0" }
+val VULKANMOD_VERSION by extra { "0.6.9-dev.4+26.2" }
 val GREENLIGHT_VERSION by extra { "0.1.0+mc26.2" }
+val BOBBY_VERSION by extra { "5.2.14+mc26.2" }
 
 allprojects {
     apply(plugin = "java")
@@ -29,14 +30,18 @@ tasks.withType<JavaCompile> {
 subprojects {
     val modVersion = createVersionString()
 
-    apply(plugin = "maven-publish")
-
     repositories {
+        // Prefer a locally installed VulkanMod build while development versions
+        // are not available from Modrinth's Maven repository.
+        mavenLocal {
+            content {
+                includeModule("maven.modrinth", "vulkanmod")
+            }
+        }
         maven("https://maven.parchmentmc.org/")
-        maven("https://maven.caffeinemc.net/releases")
-        maven("https://maven.caffeinemc.net/snapshots")
         maven("https://api.modrinth.com/maven")
         maven("https://libraries.minecraft.net")
+        maven("https://maven.bawnorton.com/releases")
         maven("https://maven.flashyreese.me/releases")
         maven("https://maven.flashyreese.me/snapshots")
     }
@@ -54,7 +59,7 @@ subprojects {
     }
 
     version = modVersion
-    group = "me.flashyreese.mods"
+    group = MAVEN_GROUP
 
     tasks.withType<JavaCompile> {
         options.encoding = "UTF-8"

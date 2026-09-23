@@ -48,7 +48,6 @@ public class MixinFogRenderer {
 
         if (fogDistance == FogDistanceHelper.FOG_DISTANCE_VANILLA) {
             fogData.renderDistanceStart = FogDistanceHelper.applyStartMultiplier(fogData.renderDistanceStart, settings);
-            FogDistanceHelper.applyRenderDistanceShape(fogData, settings);
             return;
         }
 
@@ -60,6 +59,5 @@ public class MixinFogRenderer {
 
         fogData.renderDistanceStart = FogDistanceHelper.getStart(settings);
         fogData.renderDistanceEnd = FogDistanceHelper.getEnd(fogDistance);
-        FogDistanceHelper.applyRenderDistanceShape(fogData, settings);
     }
 }

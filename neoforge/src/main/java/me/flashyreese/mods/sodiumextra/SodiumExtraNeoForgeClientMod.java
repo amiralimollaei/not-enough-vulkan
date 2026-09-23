@@ -12,7 +12,7 @@ import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.client.event.RegisterDebugEntriesEvent;
 
-@Mod(value = "sodium_extra", dist = Dist.CLIENT)
+@Mod(value = "not_enough_vulkan", dist = Dist.CLIENT)
 public class SodiumExtraNeoForgeClientMod {
     public SodiumExtraNeoForgeClientMod(IEventBus bus, ModContainer modContainer) {
         WaylandFullscreenResolutionRecovery.recoverIfNeeded(FMLPaths.GAMEDIR.get(), FMLPaths.CONFIGDIR.get());

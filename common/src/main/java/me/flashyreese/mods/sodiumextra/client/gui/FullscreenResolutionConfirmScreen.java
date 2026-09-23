@@ -1,10 +1,9 @@
 package me.flashyreese.mods.sodiumextra.client.gui;
 
-import com.mojang.blaze3d.platform.VideoMode;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.ConfirmScreen;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
-
 import java.util.Optional;
 
 /**
@@ -15,15 +14,16 @@ public class FullscreenResolutionConfirmScreen extends ConfirmScreen {
 
     private int ticksRemaining = TIMEOUT_TICKS;
 
-    public FullscreenResolutionConfirmScreen(Optional<VideoMode> previousMode) {
+    public FullscreenResolutionConfirmScreen(Optional<FullscreenResolutionConfirmation.FullscreenTarget> previousTarget,
+            Screen previousScreen) {
         super(
                 accepted -> {
                     if (accepted) {
                         FullscreenResolutionConfirmation.keep();
                     } else {
-                        FullscreenResolutionConfirmation.revert(previousMode);
+                        FullscreenResolutionConfirmation.revert(previousTarget);
                     }
-                    Minecraft.getInstance().setScreenAndShow(null);
+                    Minecraft.getInstance().setScreenAndShow(previousScreen);
                 },
                 Component.translatable("sodium-extra.option.wayland_fullscreen_resolution.confirm.title"),
                 Component.translatable("sodium-extra.option.wayland_fullscreen_resolution.confirm.message"),

@@ -1,0 +1,11 @@
+{
+  "not-enough-vulkan.page.patches": "Patches",
+  "not-enough-vulkan.option.deprecated": " (Deprecated)",
+  "not-enough-vulkan.option.timings_keybind": "Debug Timings Overlay Keybind",
+  "not-enough-vulkan.option.timings_keybind.tooltip": "Click and press one key, either by itself or with Alt, Ctrl, or Shift. Escape cancels. The default is Alt + F8.",
+  "not-enough-vulkan.option.timings_keybind.press_key": "Press a key...",
+  "not-enough-vulkan.option.skip_wayland_patches": "Skip Wayland Patches",
+  "not-enough-vulkan.option.skip_wayland_patches.tooltip": "Skips Wayland compatibility patches on Linux to enable custom GLFW workarounds (only available when using Wayland). Some effects require a restart.",
+  "not-enough-vulkan.option.monitor_selector": "Fullscreen Monitor",
+  "not-enough-vulkan.option.monitor_selector.tooltip": "The monitor that will be used when the game is in fullscreen mode"
+}

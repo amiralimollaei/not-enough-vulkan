@@ -278,12 +278,6 @@
   "sodium-extra.option.fog.tooltip": "Adjusts atmospheric terrain fog distance for this dimension.\n0: Use vanilla fog settings\n1+: Set fog distance in chunks\nOff: Disable atmospheric terrain fog",
   "sodium-extra.option.fog_distance": "Fog Distance",
   "sodium-extra.option.fog_distance.tooltip": "Adjusts atmospheric terrain fog distance.\n0: Use vanilla fog settings\n1+: Set fog distance in chunks\nOff: Disable atmospheric terrain fog",
-  "sodium-extra.option.fog_shape": "Fog Shape",
-  "sodium-extra.option.fog_shape.tooltip": "Controls which camera distance atmospheric terrain fog uses.\nVanilla: Match Minecraft's current render-distance fog shape\nCylindrical: Use horizontal distance with a taller vertical cap\nRadial: Use true spherical distance from the camera\nPlanar: Use distance to the camera plane (view depth); fog shifts as you turn",
-  "sodium-extra.option.fog_shape.cylindrical": "Cylindrical",
-  "sodium-extra.option.fog_shape.planar": "Planar",
-  "sodium-extra.option.fog_shape.radial": "Radial",
-  "sodium-extra.option.fog_shape.vanilla": "Vanilla",
   "sodium-extra.option.fog_start": "Fog Start",
   "sodium-extra.option.fog_start.tooltip": "Controls how close to the player atmospheric terrain fog begins.",
   "sodium-extra.option.fog_type.atmospheric": "Atmospheric Fog",
@@ -418,5 +412,9 @@
   "sodium-extra.suggestRSO.header": "Suggestion: Install Reese’s Sodium Options",
   "sodium-extra.suggestRSO.message": "Installing Reese’s Sodium Options alongside Sodium Extra is strongly recommended. With the growing number of features, Sodium’s video options screen can become difficult to navigate without it.",
   "sodium-extra.units.blocks": "%s block(s)",
-  "sodium-extra.units.ticks": "%s tick(s)"
+  "sodium-extra.units.ticks": "%s tick(s)",
+  "not-enough-vulkan.option.skip_wayland_patches": "Skip Wayland Patches",
+  "not-enough-vulkan.option.skip_wayland_patches.tooltip": "Disables VulkanMod's Wayland patches, which can cause issues on some Wayland compositors. Requires a game restart to take effect.",
+  "not-enough-vulkan.option.monitor_selector": "Fullscreen Monitor",
+  "not-enough-vulkan.option.monitor_selector.tooltip": "Selects which monitor to use when the game is in exclusive fullscreen mode."
 }

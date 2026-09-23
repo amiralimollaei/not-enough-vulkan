@@ -7,22 +7,16 @@ import me.flashyreese.mods.sodiumextra.client.gui.SodiumExtraDebugEntryCoords;
 import me.flashyreese.mods.sodiumextra.client.gui.SodiumExtraDebugEntryFps;
 import me.flashyreese.mods.sodiumextra.client.gui.SodiumExtraDebugEntryLightUpdates;
 import me.flashyreese.mods.sodiumextra.client.gui.SodiumExtraHud;
+import me.flashyreese.mods.sodiumextra.client.services.SodiumExtraServices;
 import net.caffeinemc.caffeineconfig.CaffeineConfig;
-import net.caffeinemc.mods.sodium.client.services.PlatformRuntimeInformation;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
-import net.minecraft.client.gui.components.debug.DebugScreenEntries;
 import net.minecraft.client.gui.components.debug.DebugScreenEntry;
-import net.minecraft.client.gui.components.debug.DebugScreenEntryStatus;
-import net.minecraft.client.gui.components.debug.DebugScreenProfile;
 import net.minecraft.resources.Identifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.function.BiConsumer;
 
 public class SodiumExtraClientMod {
@@ -52,11 +46,9 @@ public class SodiumExtraClientMod {
             MIXIN_CONFIG = CaffeineConfig.builder("Sodium Extra").withSettingsKey("sodium-extra:options")
                     .addMixinOption("core", true, false)
 
-                    .addMixinOption("adaptive_sync", true)
                     .addMixinOption("animation", true)
                     .addMixinOption("biome_colors", true)
                     .addMixinOption("cloud", true)
-                    .addMixinOption("compat", true, false)
                     .addMixinOption("fog", true)
                     .addMixinOption("fps", true)
                     .addMixinOption("gui", true)
@@ -66,7 +58,7 @@ public class SodiumExtraClientMod {
                     .addMixinOption("panini_projection", true)
                     .addMixinOption("particle", true)
                     .addMixinOption("prevent_shaders", true)
-                    .addMixinOption("reduce_resolution_on_mac", true)
+                    .addMixinOption("reduce_resolution_on_mac", false) // we don't currently support this feature.
                     .addMixinOption("render", true)
                     .addMixinOption("render.block", true)
                     .addMixinOption("render.block.entity", true)
@@ -80,15 +72,20 @@ public class SodiumExtraClientMod {
 
                     //.withLogger(SodiumExtraClientMod.logger())
                     .withInfoUrl("https://github.com/FlashyReese/sodium-extra-fabric/wiki/Configuration-File")
-                    .build(PlatformRuntimeInformation.getInstance().getConfigDirectory().resolve("sodium-extra.properties"));
+                    .build(SodiumExtraServices.PLATFORM_RUNTIME.configDirectory().resolve("sodium-extra.properties"));
         }
         return MIXIN_CONFIG;
     }
 
     private static SodiumExtraGameOptions loadConfig() {
-        return SodiumExtraGameOptions.load(PlatformRuntimeInformation.getInstance().getConfigDirectory().resolve(SodiumExtraConfigKeys.FILE_NAME));
+        return SodiumExtraGameOptions.load(SodiumExtraServices.PLATFORM_RUNTIME.configDirectory().resolve(SodiumExtraConfigKeys.FILE_NAME));
     }
 
+    /**
+     * Persist the recovery marker before asking VulkanMod to change an experimental
+     * Wayland/XWayland fullscreen mode. If the compositor never gives control back,
+     * the pre-launch recovery path can make the next start safe again.
+     */
     public static void armWaylandFullscreenResolutionRecovery() {
         SodiumExtraGameOptions options = options();
         if (!options.extraSettings.waylandFullscreenResolutionRecoveryPending) {

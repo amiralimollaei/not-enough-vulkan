@@ -1,13 +1,15 @@
-name: Publish
+name: Publish Release
 on:
   release:
     types:
       - published
 jobs:
   publish:
-    if: github.repository_owner == 'FlashyReese'
-    runs-on: self-hosted
+    if: github.repository_owner == 'amiralimollaei'
+    runs-on: ubuntu-26.04
     timeout-minutes: 30
+    permissions:
+      contents: write
     steps:
       - name: Checkout Repository
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
@@ -29,34 +31,33 @@ jobs:
         env:
           MAVEN_USERNAME: ${{ secrets.MAVEN_USERNAME }}
           MAVEN_PASSWORD: ${{ secrets.MAVEN_PASSWORD }}
-      - name: Publish NeoForge to Modrinth, CurseForge & GitHub
-        uses: Kira-NT/mc-publish@995edadc13559a8b28d0b7e6571229f067ec7659 # v3.3.0
-        with:
-          modrinth-id: PtjYWJkn
-          modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
-          curseforge-id: 447673
-          curseforge-token: ${{ secrets.CURSEFORGE_TOKEN }}
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          name: '[NeoForge] ${{ github.event.release.name }}'
-          version: '${{ github.event.release.tag_name }}+neoforge'
-          version-type: release
-          game-versions: '26.2'
-          loaders: neoforge
-          dependencies: |
-            sodium
-            greenlight(optional)
-            reeses-sodium-options(optional)
-            irisshaders(optional)
-            iris(optional)
-          files: |
-            neoforge/build/libs/!(*-@(dev|sources|javadoc|dev-shadow)).jar
-            neoforge/build/libs/*-@(dev|sources|javadoc|dev-shadow).jar
+      # - name: Publish NeoForge to Modrinth, CurseForge & GitHub
+      #   uses: Kira-NT/mc-publish@995edadc13559a8b28d0b7e6571229f067ec7659 # v3.3.0
+      #   with:
+      #     modrinth-id: iuZL1bXB
+      #     modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
+      #     curseforge-id: 1533871
+      #     curseforge-token: ${{ secrets.CURSEFORGE_TOKEN }}
+      #     github-token: ${{ secrets.GITHUB_TOKEN }}
+      #     name: '[NeoForge] ${{ github.event.release.name }}'
+      #     version: '${{ github.event.release.tag_name }}+neoforge'
+      #     version-type: release
+      #     game-versions: '26.2'
+      #     loaders: neoforge
+      #     dependencies: |
+      #       vulkanmod
+      #       fabric-api(optional)
+      #       bobby(optional)
+      #       greenlight(optional)
+      #     files: |
+      #       neoforge/build/libs/!(*-@(dev|sources|javadoc|dev-shadow)).jar
+      #       neoforge/build/libs/*-@(dev|sources|javadoc|dev-shadow).jar
       - name: Publish Fabric to Modrinth, CurseForge & GitHub
         uses: Kira-NT/mc-publish@995edadc13559a8b28d0b7e6571229f067ec7659 # v3.3.0
         with:
-          modrinth-id: PtjYWJkn
+          modrinth-id: iuZL1bXB
           modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
-          curseforge-id: 447673
+          curseforge-id: 1533871
           curseforge-token: ${{ secrets.CURSEFORGE_TOKEN }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
           name: '[Fabric] ${{ github.event.release.name }}'
@@ -65,11 +66,10 @@ jobs:
           game-versions: '26.2'
           loaders: fabric
           dependencies: |
-            sodium
+            vulkanmod
+            fabric-api(optional)
+            bobby(optional)
             greenlight(optional)
-            reeses-sodium-options(optional)
-            irisshaders(optional)
-            iris(optional)
           files: |
             fabric/build/libs/!(*-@(dev|sources|javadoc|dev-shadow)).jar
             fabric/build/libs/*-@(dev|sources|javadoc|dev-shadow).jar

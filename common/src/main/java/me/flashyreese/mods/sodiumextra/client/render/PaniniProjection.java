@@ -7,7 +7,6 @@ import com.mojang.blaze3d.resource.GraphicsResourceAllocator;
 import com.mojang.blaze3d.systems.RenderSystem;
 import me.flashyreese.mods.sodiumextra.client.SodiumExtraClientMod;
 import me.flashyreese.mods.sodiumextra.client.config.SodiumExtraGameOptions;
-import me.flashyreese.mods.sodiumextra.compat.IrisCompat;
 import me.flashyreese.mods.sodiumextra.mixin.panini_projection.AccessorPostChain;
 import me.flashyreese.mods.sodiumextra.mixin.panini_projection.AccessorPostPass;
 import net.minecraft.client.Minecraft;
@@ -58,8 +57,7 @@ public class PaniniProjection {
                 && !minecraft.player.isScoping()
                 && cameraRenderState != null
                 && !cameraRenderState.isPanoramicMode
-                && !cameraRenderState.isFrustumCaptured
-                && !IrisCompat.isShaderPackInUse();
+                && !cameraRenderState.isFrustumCaptured;
     }
 
     private static boolean hasValidWindow(WindowRenderState windowRenderState) {

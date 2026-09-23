@@ -4,20 +4,28 @@ plugins {
     id("java-library")
 }
 
-val MINECRAFT_VERSION: String by rootProject.extra
-val PARCHMENT_VERSION: String? by rootProject.extra
 val NEOFORGE_VERSION: String by rootProject.extra
 val MOD_VERSION: String by rootProject.extra
 
-val SODIUM_VERSION: String by rootProject.extra
+val FABRIC_LOADER_VERSION: String by rootProject.extra
+val VULKANMOD_VERSION: String by rootProject.extra
 val GREENLIGHT_VERSION: String by rootProject.extra
+val BOBBY_VERSION: String by rootProject.extra
 val ARCHIVE_NAME: String by rootProject.extra
+
+// Fabric Loom resolves the Fabric VulkanMod artifact into its compile classpath.
+// Reuse that resolved jar for NeoForge compilation because VulkanMod 26.2 is not
+// published as a normal NeoForge Maven dependency.
+val fabricVulkanModClasspath = project(":fabric").configurations.named("compileClasspath").map { classpath ->
+    classpath.filter { file -> file.name == "vulkanmod-$VULKANMOD_VERSION.jar" }
+}
 
 base {
     archivesName = "$ARCHIVE_NAME-neoforge"
 }
 
 repositories {
+    maven("https://maven.fabricmc.net/")
     maven("https://maven.su5ed.dev/releases")
     maven("https://maven.neoforged.net/releases/")
     maven("https://maven.caffeinemc.net/releases")
@@ -28,6 +36,10 @@ repositories {
             maven {
                 name = "Modrinth"
                 url = uri("https://api.modrinth.com/maven")
+                metadataSources {
+                    mavenPom()
+                    artifact()
+                }
             }
         }
         filter {
@@ -48,11 +60,6 @@ neoForge {
     // Specify the version of NeoForge to use.
     version = NEOFORGE_VERSION
 
-    /*parchment {
-        mappingsVersion = PARCHMENT_VERSION
-        minecraftVersion = MINECRAFT_VERSION
-    }*/
-
     runs {
         create("client") {
             client()
@@ -67,43 +74,36 @@ neoForge {
     }
 }
 
-fun includeDep(dependency: String, closure: Action<ExternalModuleDependency>) {
-    dependencies.implementation(dependency, closure)
-    dependencies.jarJar(dependency, closure)
-}
-
-fun includeDep(dependency: String) {
-    dependencies.implementation(dependency)
-    dependencies.jarJar(dependency)
-}
-
-tasks.named("compileTestJava").configure {
-    enabled = false
-}
-
 dependencies {
     compileOnly(project(":common"))
-    implementation("net.caffeinemc:sodium-neoforge-mod:$SODIUM_VERSION")
-    implementation("net.caffeinemc:sodium-neoforge-api:${SODIUM_VERSION}")
-    implementation("net.caffeinemc:sodium-neoforge:${SODIUM_VERSION}")
+
+    // Common sources use Fabric/VulkanMod APIs. These are compile-time only for
+    // NeoForge: the Fabric VulkanMod jar must not be bundled or treated as a
+    // NeoForge runtime dependency.
+    compileOnly("net.fabricmc:fabric-loader:$FABRIC_LOADER_VERSION")
+    compileOnly(files(fabricVulkanModClasspath))
+    compileOnly("io.github.llamalad7:mixinextras-common:0.5.4")
+    annotationProcessor("io.github.llamalad7:mixinextras-common:0.5.4")
+    compileOnly("net.fabricmc:sponge-mixin:0.17.3+mixin.0.8.7")
+    compileOnly("com.github.bawnorton.mixinsquared:mixinsquared-fabric:0.3.7-beta.2")
+    annotationProcessor("com.github.bawnorton.mixinsquared:mixinsquared-fabric:0.3.7-beta.2")
+    compileOnly("org.jspecify:jspecify:1.0.0")
+    compileOnly("org.apache.commons:commons-lang3:3.18.0")
+    compileOnly("maven.modrinth:bobby:$BOBBY_VERSION")
+
     implementation("me.flashyreese.mods:greenlight-api:$GREENLIGHT_VERSION")
     jarJar("me.flashyreese.mods:greenlight-api:$GREENLIGHT_VERSION")
 }
 
-// NeoGradle compiles the game, but we don't want to add our common code to the game's code
-val notNeoTask: (Task) -> Boolean = { it: Task ->
-    !it.name.startsWith("neo") && !it.name.startsWith("compileService")
-}
-
-tasks.withType<JavaCompile>().matching(notNeoTask).configureEach {
+tasks.named<JavaCompile>("compileJava") {
     source(project(":common").sourceSets.main.get().allSource)
 }
 
-tasks.withType<Javadoc>().matching(notNeoTask).configureEach {
+tasks.named<Javadoc>("javadoc") {
     source(project(":common").sourceSets.main.get().allJava)
 }
 
-tasks.withType<ProcessResources>().matching(notNeoTask).configureEach {
+tasks.named<ProcessResources>("processResources") {
     from(project(":common").sourceSets.main.get().resources)
 }
 

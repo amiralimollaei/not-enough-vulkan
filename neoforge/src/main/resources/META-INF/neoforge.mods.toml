@@ -3,34 +3,34 @@ loaderVersion = "*"
 license = "LGPLv3"
 
 [[mods]]
-modId = "sodium_extra"
+modId = "not_enough_vulkan"
 
 version = "${version}"
-displayName = "Sodium Extra"
+displayName = "Not Enough Vulkan"
 
-logoFile = "assets/sodium-extra/textures/icon.png" #optional
+logoFile = "assets/not-enough-vulkan/textures/icon.png" #optional
 
-authors = "FlashyReese"
+authors = "FlashyReese, amiralimollaei"
 
 description = '''
-Features that shouldn't be in Sodium.
+Features that shouldn't be in VulkanMod.
 '''
 
-[[dependencies.sodium_extra]]
+[[dependencies.not_enough_vulkan]]
 modId = "minecraft"
 type = "required"
 versionRange = "[26.2,)"
 ordering = "NONE"
 side = "CLIENT"
 
-[[dependencies.sodium_extra]]
-modId = "sodium"
+[[dependencies.not_enough_vulkan]]
+modId = "vulkanmod"
 type = "required"
-versionRange = "[0.9.1+mc26.2,)"
+versionRange = "[0.6.9,)"
 ordering = "NONE"
 side = "CLIENT"
 
-[[dependencies.sodium_extra]]
+[[dependencies.not_enough_vulkan]]
 modId = "greenlight"
 type = "optional"
 versionRange = "[0.1.0,)"
@@ -38,10 +38,7 @@ ordering = "AFTER"
 side = "CLIENT"
 
 [[mixins]]
-config = "sodium-extra.mixins.json"
+config = "not-enough-vulkan.mixins.json"
 
 [[accessTransformers]]
 file="accesstransformer.cfg"
-
-[modproperties.sodium_extra]
-"sodium:config_api_user" = "me.flashyreese.mods.sodiumextra.client.config.SodiumExtraConfig"

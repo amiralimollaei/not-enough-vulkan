@@ -1,0 +1,28 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "io.github.amiralimollaei.mods.notenoughvulkan.mixin",
+  "plugin": "io.github.amiralimollaei.mods.notenoughvulkan.mixin.NotEnoughVulkanMixinConfigPlugin",
+  "compatibilityLevel": "JAVA_25",
+  "client": [
+    "compat.vulkanmod.AccessorVulkanRangeOption",
+    "compat.vulkanmod.MixinFullscreenResolutionConfirmation",
+    "compat.vulkanmod.WindowMixinSquared",
+    "compat.vulkanmod.MixinVulkanOptions",
+    "compat.vulkanmod.MixinVulkanOptionWidget",
+    "compat.vulkanmod.TimingsKeyboardMixin",
+    "compat.vulkanmod.TimingsOverlayMixin",
+    "compat.vulkanmod.TimingsOptionScreenMixin",
+    "compat.bobby.FakeChunkManagerMixin",
+    "compat.bobby.OptionsMixin",
+    "compat.monitor_selector.InitializerMixin",
+    "compat.monitor_selector.OptionsMixin",
+    "compat.monitor_selector.VideoModeManagerMixin",
+    "compat.skip_wayland_patches.InputConstantsMMixin",
+    "compat.skip_wayland_patches.MinecraftMixinSquared",
+    "core.enhance_vk_options.ModIconWidgetMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

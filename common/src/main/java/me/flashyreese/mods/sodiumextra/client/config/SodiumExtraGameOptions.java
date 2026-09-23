@@ -5,20 +5,15 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonParseException;
 import com.google.gson.annotations.SerializedName;
-import com.mojang.blaze3d.opengl.GlBackend;
-import com.mojang.blaze3d.systems.GpuSurface;
-import com.mojang.blaze3d.vulkan.VulkanBackend;
 import it.unimi.dsi.fastutil.objects.Object2BooleanLinkedOpenHashMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectArrayMap;
 import me.flashyreese.mods.sodiumextra.client.SodiumExtraClientMod;
 import me.flashyreese.mods.sodiumextra.client.fog.FogDistanceHelper;
 import me.flashyreese.mods.sodiumextra.common.util.IdentifierSerializer;
-import net.caffeinemc.mods.sodium.api.config.StorageEventHandler;
-import net.caffeinemc.mods.sodium.client.gui.options.TextProvider;
-import net.minecraft.client.Minecraft;
+import io.github.amiralimollaei.mods.notenoughvulkan.config.vk.SettingsSaveHook;
+import io.github.amiralimollaei.mods.notenoughvulkan.config.vk.ModSettingsSpec.LocalizedName;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
-import org.lwjgl.glfw.GLFW;
 
 import java.io.File;
 import java.io.IOException;
@@ -26,11 +21,9 @@ import java.lang.reflect.Modifier;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Arrays;
-import java.util.EnumSet;
 import java.util.Map;
 
-public class SodiumExtraGameOptions implements StorageEventHandler {
+public class SodiumExtraGameOptions implements SettingsSaveHook {
     private static final Gson gson = new GsonBuilder()
             .registerTypeAdapter(Identifier.class, new IdentifierSerializer())
             .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
@@ -133,7 +126,7 @@ public class SodiumExtraGameOptions implements StorageEventHandler {
         this.writeChanges();
     }
 
-    public enum OverlayCorner implements TextProvider {
+    public enum OverlayCorner implements LocalizedName {
         TOP_LEFT("sodium-extra.option.overlay_corner.top_left"),
         TOP_RIGHT("sodium-extra.option.overlay_corner.top_right"),
         BOTTOM_LEFT("sodium-extra.option.overlay_corner.bottom_left"),
@@ -151,7 +144,7 @@ public class SodiumExtraGameOptions implements StorageEventHandler {
         }
     }
 
-    public enum TextContrast implements TextProvider {
+    public enum TextContrast implements LocalizedName {
         NONE("sodium-extra.option.text_contrast.none"),
         BACKGROUND("sodium-extra.option.text_contrast.background"),
         SHADOW("sodium-extra.option.text_contrast.shadow");
@@ -167,8 +160,8 @@ public class SodiumExtraGameOptions implements StorageEventHandler {
             return this.text;
         }
     }
-
-    public enum VerticalSyncOption implements TextProvider {
+    /*
+    public enum VerticalSyncOption implements LocalizedName {
         OFF("options.off"),
         ON("options.on"),
         ADAPTIVE("sodium-extra.option.use_adaptive_sync.name");
@@ -211,7 +204,7 @@ public class SodiumExtraGameOptions implements StorageEventHandler {
             return this.name;
         }
     }
-
+    */
     public static class AnimationSettings {
         public boolean animation;
         public boolean water;
@@ -330,28 +323,6 @@ public class SodiumExtraGameOptions implements StorageEventHandler {
 
     }
 
-    public enum FogShapeMode implements TextProvider {
-        VANILLA("sodium-extra.option.fog_shape.vanilla"),
-        CYLINDRICAL("sodium-extra.option.fog_shape.cylindrical"),
-        RADIAL("sodium-extra.option.fog_shape.radial"),
-        PLANAR("sodium-extra.option.fog_shape.planar");
-
-        private final Component text;
-
-        FogShapeMode(String text) {
-            this.text = Component.translatable(text);
-        }
-
-        public static EnumSet<FogShapeMode> getAvailableOptions() {
-            return EnumSet.of(VANILLA, CYLINDRICAL, RADIAL, PLANAR);
-        }
-
-        @Override
-        public Component getLocalizedName() {
-            return this.text;
-        }
-    }
-
     public static class FogSettings {
         public boolean advanced;
         public boolean multiDimensionFogControl;
@@ -416,10 +387,6 @@ public class SodiumExtraGameOptions implements StorageEventHandler {
             return this.getDimensionOrFallback(dimensionId).startPercent;
         }
 
-        public FogShapeMode getDimensionFogShape(Identifier dimensionId) {
-            return this.getDimensionOrFallback(dimensionId).shapeMode;
-        }
-
         public int getDimensionCloudFogPercent(Identifier dimensionId) {
             return this.getDimensionOrFallback(dimensionId).cloudFogPercent;
         }
@@ -443,7 +410,6 @@ public class SodiumExtraGameOptions implements StorageEventHandler {
             AtmosphericFogSettings base = this.getAtmosphericFallback();
             AtmosphericFogSettings settings = new AtmosphericFogSettings();
             settings.startPercent = base.startPercent;
-            settings.shapeMode = base.shapeMode;
             settings.cloudFogPercent = base.cloudFogPercent;
             return settings;
         }
@@ -456,13 +422,11 @@ public class SodiumExtraGameOptions implements StorageEventHandler {
     public static class AtmosphericFogSettings {
         public int distanceChunks;
         public int startPercent;
-        public FogShapeMode shapeMode;
         public int cloudFogPercent;
 
         public AtmosphericFogSettings() {
             this.distanceChunks = FogDistanceHelper.FOG_DISTANCE_VANILLA;
             this.startPercent = 100;
-            this.shapeMode = FogShapeMode.VANILLA;
             this.cloudFogPercent = FogDistanceHelper.VANILLA_CLOUD_FOG_PERCENT;
         }
 
@@ -470,11 +434,6 @@ public class SodiumExtraGameOptions implements StorageEventHandler {
             this.startPercent = Math.clamp(this.startPercent, 0, 100);
             this.cloudFogPercent = Math.clamp(this.cloudFogPercent, 0, 100);
 
-            if (this.shapeMode == null) {
-                this.shapeMode = FogShapeMode.VANILLA;
-            } else if (!FogShapeMode.getAvailableOptions().contains(this.shapeMode)) {
-                this.shapeMode = FogShapeMode.VANILLA;
-            }
         }
     }
 

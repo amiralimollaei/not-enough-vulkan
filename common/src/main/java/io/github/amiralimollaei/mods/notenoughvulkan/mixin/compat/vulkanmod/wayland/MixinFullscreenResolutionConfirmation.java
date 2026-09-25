@@ -1,4 +1,4 @@
-package io.github.amiralimollaei.mods.notenoughvulkan.mixin.compat.vulkanmod;
+package io.github.amiralimollaei.mods.notenoughvulkan.mixin.compat.vulkanmod.wayland;
 
 import me.flashyreese.mods.sodiumextra.client.gui.FullscreenResolutionConfirmation;
 import net.vulkanmod.config.option.CyclingOption;
@@ -83,15 +83,15 @@ public class MixinFullscreenResolutionConfirmation {
             ),
             remap = false
     )
-    private static void notEnoughVulkan$requestRefreshRateConfirmation(Integer refreshRate, CallbackInfo ci) {
+    private static void notEnoughVulkan$requestRefreshRateConfirmation(Integer value, CallbackInfo ci) {
         VideoModeSet.VideoMode currentMode = VideoModeManager.selectedVideoMode;
-        if (currentMode == null || refreshRate == null) {
+        if (currentMode == null || value == null) {
             return;
         }
 
         FullscreenResolutionConfirmation.request(
                 currentMode,
-                new VideoModeSet.VideoMode(currentMode.width, currentMode.height, currentMode.bitDepth, refreshRate)
+                new VideoModeSet.VideoMode(currentMode.width, currentMode.height, currentMode.bitDepth, value)
         );
     }
 }

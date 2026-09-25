@@ -19,7 +19,7 @@ import java.nio.file.Path;
 public final class NotEnoughVulkanGameOptions {
     private static final Gson GSON = new GsonBuilder()
             .registerTypeAdapter(Identifier.class, new IdentifierSerializer())
-            .registerTypeAdapter(TimingsKeybind.class, new TimingsKeybindSerializer())
+            .registerTypeAdapter(VkKeybind.class, new VkKeybindSerializer())
             .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
             .setPrettyPrinting()
             .excludeFieldsWithModifiers(Modifier.PRIVATE)
@@ -77,11 +77,12 @@ public final class NotEnoughVulkanGameOptions {
         if (this.patchesSettings.selectedMonitor == null) {
             this.patchesSettings.selectedMonitor = "";
         }
-        if (this.patchesSettings.timingsKeybind == null
-                || this.patchesSettings.timingsKeybind.key() <= 0
-                || this.patchesSettings.timingsKeybind.key() > GLFW.GLFW_KEY_LAST
-                || (this.patchesSettings.timingsKeybind.modifiers() & ~7) != 0) {
-            this.patchesSettings.timingsKeybind = TimingsKeybind.DEFAULT;
+        if (this.patchesSettings.vkProfilerOverlayKeybind == null  || this.patchesSettings.vkProfilerOverlayKeybind.isGarbage()) {
+            this.patchesSettings.vkProfilerOverlayKeybind = VkKeybind.PROFILER_OVERLAY_DEFAULT;
+        }
+
+        if (this.patchesSettings.vkBuildTimeProfilerKeybind == null || this.patchesSettings.vkBuildTimeProfilerKeybind.isGarbage()) {
+            this.patchesSettings.vkBuildTimeProfilerKeybind = VkKeybind.BUILD_TIME_PROFILER_DEFAULT;
         }
     }
 
@@ -99,6 +100,7 @@ public final class NotEnoughVulkanGameOptions {
     public static final class PatchesSettings {
         public boolean skipWaylandPatches = false;
         public String selectedMonitor = "";
-        public TimingsKeybind timingsKeybind = TimingsKeybind.DEFAULT;
+        public VkKeybind vkProfilerOverlayKeybind = VkKeybind.PROFILER_OVERLAY_DEFAULT;
+        public VkKeybind vkBuildTimeProfilerKeybind = VkKeybind.BUILD_TIME_PROFILER_DEFAULT;
     }
 }

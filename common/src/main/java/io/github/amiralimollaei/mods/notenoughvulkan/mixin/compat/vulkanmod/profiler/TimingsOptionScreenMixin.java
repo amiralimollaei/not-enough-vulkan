@@ -1,4 +1,4 @@
-package io.github.amiralimollaei.mods.notenoughvulkan.mixin.compat.vulkanmod;
+package io.github.amiralimollaei.mods.notenoughvulkan.mixin.compat.vulkanmod.profiler;
 
 import io.github.amiralimollaei.mods.notenoughvulkan.compat.vkmod.option.KeybindOptionWidget;
 import net.minecraft.client.input.KeyEvent;

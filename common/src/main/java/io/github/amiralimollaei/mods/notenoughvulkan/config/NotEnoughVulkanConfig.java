@@ -12,16 +12,30 @@ public class NotEnoughVulkanConfig {
     public void register(ModSettingsSpec spec) {
         spec.icon(Identifier.parse("not-enough-vulkan:textures/icon.png"));
         spec.page(Component.translatable("not-enough-vulkan.page.patches"))
-                .group(Component.literal("Debug"), g -> g.add(spec.keybind(
-                                Identifier.parse("not-enough-vulkan:timings_keybind"))
-                        .title(Component.translatable("not-enough-vulkan.option.timings_keybind"))
-                        .hint(Component.translatable("not-enough-vulkan.option.timings_keybind.tooltip"))
-                        .defaults(TimingsKeybind.DEFAULT)
-                        .bind(
-                                value -> NotEnoughVulkanClientMod.notEnoughVulkanOptions().patchesSettings.timingsKeybind = value,
-                                () -> NotEnoughVulkanClientMod.notEnoughVulkanOptions().patchesSettings.timingsKeybind
-                        )
-                        .onSave(() -> NotEnoughVulkanClientMod.notEnoughVulkanOptions().writeChanges())))
+                .group(Component.literal("Debug"), g -> {
+                    g.add(
+                            spec.keybind(Identifier.parse("not-enough-vulkan:profiler_overlay_keybind"))
+                            .title(Component.translatable("not-enough-vulkan.option.profiler_overlay_keybind"))
+                            .hint(Component.translatable("not-enough-vulkan.option.keybind.tooltip"))
+                            .defaults(VkKeybind.PROFILER_OVERLAY_DEFAULT)
+                            .bind(
+                                    value -> NotEnoughVulkanClientMod.notEnoughVulkanOptions().patchesSettings.vkProfilerOverlayKeybind = value,
+                                    () -> NotEnoughVulkanClientMod.notEnoughVulkanOptions().patchesSettings.vkProfilerOverlayKeybind
+                            )
+                            .onSave(() -> NotEnoughVulkanClientMod.notEnoughVulkanOptions().writeChanges())
+                    );
+                    g.add(
+                            spec.keybind(Identifier.parse("not-enough-vulkan:build_time_profiler_keybind"))
+                            .title(Component.translatable("not-enough-vulkan.option.build_time_profiler_keybind"))
+                            .hint(Component.translatable("not-enough-vulkan.option.keybind.tooltip"))
+                            .defaults(VkKeybind.BUILD_TIME_PROFILER_DEFAULT)
+                            .bind(
+                                    value -> NotEnoughVulkanClientMod.notEnoughVulkanOptions().patchesSettings.vkBuildTimeProfilerKeybind = value,
+                                    () -> NotEnoughVulkanClientMod.notEnoughVulkanOptions().patchesSettings.vkBuildTimeProfilerKeybind
+                            )
+                            .onSave(() -> NotEnoughVulkanClientMod.notEnoughVulkanOptions().writeChanges())
+                    );
+                })
                 .group(Component.literal("Compatibility"), g -> g.add(spec.toggle(
                                 Identifier.parse("not-enough-vulkan:skip_wayland_patches"))
                         .title(Component.translatable("not-enough-vulkan.option.skip_wayland_patches"))

@@ -3,7 +3,7 @@ package io.github.amiralimollaei.mods.notenoughvulkan.config.vk;
 import io.github.amiralimollaei.mods.notenoughvulkan.compat.vkmod.VkModOptionRegistry;
 import io.github.amiralimollaei.mods.notenoughvulkan.compat.vkmod.option.ActionOption;
 import io.github.amiralimollaei.mods.notenoughvulkan.compat.vkmod.option.KeybindOption;
-import io.github.amiralimollaei.mods.notenoughvulkan.config.TimingsKeybind;
+import io.github.amiralimollaei.mods.notenoughvulkan.config.VkKeybind;
 import io.github.amiralimollaei.mods.notenoughvulkan.mixin.compat.vulkanmod.AccessorVulkanRangeOption;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
@@ -283,15 +283,14 @@ public final class ModSettingsSpec implements SettingsState {
         }
     }
 
-    public static final class KeybindSpec extends OptionSpec<TimingsKeybind> {
+    public static final class KeybindSpec extends OptionSpec<VkKeybind> {
         KeybindSpec(Identifier id) {
             super(id);
         }
 
         @Override
-        Option<TimingsKeybind> create(ModSettingsSpec owner, Consumer<TimingsKeybind> applyingSetter,
-                Supplier<TimingsKeybind> valueGetter) {
-            return new KeybindOption(this.title, applyingSetter, valueGetter);
+        Option<VkKeybind> create(ModSettingsSpec owner, Consumer<VkKeybind> applyingSetter, Supplier<VkKeybind> valueGetter) {
+            return new KeybindOption(this.title, applyingSetter, valueGetter, this.fallbackValue);
         }
     }
 

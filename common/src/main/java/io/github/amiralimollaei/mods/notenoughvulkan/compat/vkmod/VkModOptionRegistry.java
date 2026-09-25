@@ -22,6 +22,7 @@ public final class VkModOptionRegistry {
 
     public static void mapVideoSettings(List<OptionPage> pages) {
         OPTIONS.clear();
+        if (pages == null) return;
         for (OptionPage page : pages) {
             for (OptionBlock block : page.optionBlocks) {
                 for (Option<?> option : block.options()) {

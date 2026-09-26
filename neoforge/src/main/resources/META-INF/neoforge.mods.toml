@@ -19,7 +19,7 @@ Features that shouldn't be in VulkanMod.
 [[dependencies.not_enough_vulkan]]
 modId = "minecraft"
 type = "required"
-versionRange = "[26.2,)"
+versionRange = "[${minecraft_version}]"
 ordering = "NONE"
 side = "CLIENT"
 

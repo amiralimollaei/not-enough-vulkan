@@ -227,6 +227,14 @@ public final class FogDistanceHelper {
         }
     }
 
+    public static float decodeRenderDistanceStart(float renderDistanceStart, float renderDistanceEnd) {
+        return renderDistanceStart;
+    }
+
+    public static float decodeRenderDistanceEnd(float renderDistanceStart, float renderDistanceEnd) {
+        return renderDistanceEnd;
+    }
+
     private record ProtectedGameplayFogPolicy(Map<ProtectedFogType, ProtectedFogRule> rules) {
         private static ProtectedGameplayFogPolicy fromJson(JsonObject settings) {
             EnumMap<ProtectedFogType, ProtectedFogRule> rules = new EnumMap<>(ProtectedFogType.class);

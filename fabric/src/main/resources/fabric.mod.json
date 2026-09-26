@@ -65,7 +65,7 @@
   "depends": {
     "fabricloader": ">=0.19",
     "vulkanmod": ">=0.6.8",
-    "minecraft": ">=26.2 <26.3"
+    "minecraft": "${minecraft_version}"
   },
   "breaks": {
     "sodium": "*"

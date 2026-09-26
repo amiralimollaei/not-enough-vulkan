@@ -1,87 +1,77 @@
+import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+
 plugins {
     id("idea")
-    id("net.neoforged.moddev") version "2.0.141"
     id("java-library")
+    id("dev.architectury.loom-no-remap")
+    id("architectury-plugin")
+    id("com.gradleup.shadow")
 }
 
-val NEOFORGE_VERSION: String by rootProject.extra
-val MOD_VERSION: String by rootProject.extra
-
-val FABRIC_LOADER_VERSION: String by rootProject.extra
-val VULKANMOD_VERSION: String by rootProject.extra
-val GREENLIGHT_VERSION: String by rootProject.extra
-val BOBBY_VERSION: String by rootProject.extra
-val ARCHIVE_NAME: String by rootProject.extra
-
-// Fabric Loom resolves the Fabric VulkanMod artifact into its compile classpath.
-// Reuse that resolved jar for NeoForge compilation because VulkanMod 26.2 is not
-// published as a normal NeoForge Maven dependency.
-val fabricVulkanModClasspath = project(":fabric").configurations.named("compileClasspath").map { classpath ->
-    classpath.filter { file -> file.name == "vulkanmod-$VULKANMOD_VERSION.jar" }
-}
+val MINECRAFT_VERSION = rootProject.extra["MINECRAFT_VERSION"] as String
+val NEOFORGE_VERSION = rootProject.extra["NEOFORGE_VERSION"] as String
+val VULKANMOD_VERSION = rootProject.extra["VULKANMOD_VERSION"] as String
+val GREENLIGHT_VERSION = rootProject.extra["GREENLIGHT_VERSION"] as String
+val BOBBY_VERSION = rootProject.extra["BOBBY_VERSION"] as String
 
 base {
-    archivesName = "$ARCHIVE_NAME-neoforge"
+    archivesName.set("${rootProject.name}-neoforge")
+}
+
+architectury {
+    compileOnly()
+    platformSetupLoomIde()
+    neoForge()
 }
 
 repositories {
-    maven("https://maven.fabricmc.net/")
-    maven("https://maven.su5ed.dev/releases")
     maven("https://maven.neoforged.net/releases/")
-    maven("https://maven.caffeinemc.net/releases")
-    maven("https://maven.caffeinemc.net/snapshots")
-
-    exclusiveContent {
-        forRepository {
-            maven {
-                name = "Modrinth"
-                url = uri("https://api.modrinth.com/maven")
-                metadataSources {
-                    mavenPom()
-                    artifact()
-                }
-            }
-        }
-        filter {
-            includeGroup("maven.modrinth")
-        }
-    }
 }
 
-tasks.jar {
-    from(rootDir.resolve("LICENSE.txt"))
-
-    filesMatching("neoforge.mods.toml") {
-        expand(mapOf("version" to MOD_VERSION))
-    }
-}
-
-neoForge {
-    // Specify the version of NeoForge to use.
-    version = NEOFORGE_VERSION
-
-    runs {
-        create("client") {
-            client()
-            ideName = "NeoForge/Client"
-        }
+loom {
+    neoForge {
+        accessTransformer("src/main/resources/META-INF/accesstransformer.cfg")
     }
 
     mods {
-        create(project.name) {
+        named("main") {
             sourceSet(sourceSets.main.get())
+            sourceSet(project(":common").sourceSets.main.get())
+        }
+    }
+
+    runs {
+        named("client") {
+            client()
+            displayName.set("NeoForge Client")
+            runDirectory.set(layout.projectDirectory.dir("run"))
         }
     }
 }
 
-dependencies {
-    compileOnly(project(":common"))
+val common = configurations.create("common") {
+    isCanBeResolved = true
+    isCanBeConsumed = false
+}
 
-    // Common sources use Fabric/VulkanMod APIs. These are compile-time only for
-    // NeoForge: the Fabric VulkanMod jar must not be bundled or treated as a
-    // NeoForge runtime dependency.
-    compileOnly("net.fabricmc:fabric-loader:$FABRIC_LOADER_VERSION")
-    compileOnly(files(fabricVulkanModClasspath))
+val shadowBundle = configurations.create("shadowBundle") {
+    isCanBeResolved = true
+    isCanBeConsumed = false
+}
+
+configurations.named("compileClasspath") {
+    extendsFrom(common)
+}
+
+configurations.named("runtimeClasspath") {
+    extendsFrom(common)
+}
+
+dependencies {
+    minecraft("net.minecraft:minecraft:$MINECRAFT_VERSION")
+    // Specify the version of NeoForge to use.
+    add("neoForge", "net.neoforged:neoforge:$NEOFORGE_VERSION")
+
     compileOnly("io.github.llamalad7:mixinextras-common:0.5.4")
     annotationProcessor("io.github.llamalad7:mixinextras-common:0.5.4")
     compileOnly("net.fabricmc:sponge-mixin:0.17.3+mixin.0.8.7")
@@ -92,22 +82,64 @@ dependencies {
     compileOnly("maven.modrinth:bobby:$BOBBY_VERSION")
 
     implementation("me.flashyreese.mods:greenlight-api:$GREENLIGHT_VERSION")
-    jarJar("me.flashyreese.mods:greenlight-api:$GREENLIGHT_VERSION")
+    include("me.flashyreese.mods:greenlight-api:$GREENLIGHT_VERSION")
+    add("common", project(":common")) {
+        isTransitive = false
+    }
+    add("shadowBundle", project(path = ":common", configuration = "runtimeElements")) {
+        isTransitive = false
+    }
 }
 
-tasks.named<JavaCompile>("compileJava") {
-    source(project(":common").sourceSets.main.get().allSource)
+tasks.named("compileTestJava").configure {
+    enabled = false
 }
 
-tasks.named<Javadoc>("javadoc") {
-    source(project(":common").sourceSets.main.get().allJava)
+tasks.test {
+    failOnNoDiscoveredTests = false
 }
 
-tasks.named<ProcessResources>("processResources") {
-    from(project(":common").sourceSets.main.get().resources)
+tasks {
+    processResources {
+        inputs.property("version", project.version)
+        inputs.property("minecraft_version", MINECRAFT_VERSION)
+        inputs.property("vulkanmod_version", VULKANMOD_VERSION)
+
+        filesMatching("META-INF/neoforge.mods.toml") {
+            expand(mapOf(
+                "version" to project.version,
+                "minecraft_version" to MINECRAFT_VERSION,
+                "vulkanmod_version" to VULKANMOD_VERSION
+            ))
+        }
+    }
+
+    jar {
+        archiveClassifier.set("dev")
+        from(rootDir.resolve("LICENSE.txt"))
+    }
 }
 
-java.toolchain.languageVersion = JavaLanguageVersion.of(25)
+tasks.named<ShadowJar>("shadowJar") {
+    configurations = listOf(shadowBundle)
+    archiveClassifier.set("")
+    from(rootDir.resolve("LICENSE.txt"))
+}
+
+loom.nestJars(tasks.named<ShadowJar>("shadowJar"), configurations.named("include"))
+
+configurations.named("apiElements") {
+    outgoing.artifacts.clear()
+}
+
+configurations.named("runtimeElements") {
+    outgoing.artifacts.clear()
+}
+
+artifacts {
+    add("apiElements", tasks.named("shadowJar"))
+    add("runtimeElements", tasks.named("shadowJar"))
+}
 
 publishing {
     publications {

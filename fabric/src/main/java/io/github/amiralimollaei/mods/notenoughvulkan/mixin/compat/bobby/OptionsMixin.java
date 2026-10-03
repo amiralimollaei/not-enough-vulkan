@@ -13,7 +13,7 @@ public abstract class OptionsMixin {
             at = @At(
                     value = "INVOKE",
                     target = "Lnet/vulkanmod/config/option/RangeOption;<init>(Lnet/minecraft/network/chat/Component;IIILjava/util/function/Consumer;Ljava/util/function/Supplier;)V",
-                    ordinal = 1
+                    ordinal = 0
             ),
             index = 2
     )

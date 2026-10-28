@@ -35,14 +35,14 @@
   "icon": "assets/not-enough-vulkan/textures/icon.png",
   "environment": "client",
   "entrypoints": {
-    "vulkanmod:mod_settings_registry": [
-      "io.github.amiralimollaei.mods.notenoughvulkan.config.impl.NotEnoughVulkanVkModSettingsFactoryImpl"
-    ],
     "client": [
       "me.flashyreese.mods.sodiumextra.SodiumExtraFabricClientModInitializer"
     ],
     "preLaunch": [
       "me.flashyreese.mods.sodiumextra.SodiumExtraFabricPreLaunch"
+    ],
+    "vulkanmod:mod_settings_registry": [
+      "io.github.amiralimollaei.mods.notenoughvulkan.config.impl.NotEnoughVulkanVkModSettingsFactoryImpl"
     ]
   },
   "custom": {
@@ -51,8 +51,12 @@
         "id": "vulkanmod"
       },
       "links": {
+        "modmenu.crowdin": "https://crowdin.com/project/sodium-extra",
+        "modmenu.curseforge": "https://curseforge.com/minecraft/mc-mods/sodium-extra",
         "modmenu.discord": "https://discord.gg/BFmZU9kUbR",
+        "modmenu.donate": "https://ko-fi.com/flashyreese",
         "modmenu.github_releases": "https://github.com/amiralimollaei/not-enough-vulkan/releases",
+        "modmenu.kofi": "https://ko-fi.com/flashyreese",
         "modmenu.modrinth": "https://modrinth.com/mod/not-enough-vulkan"
       }
     }
@@ -63,8 +67,8 @@
     "not-enough-vulkan.mixins.json"
   ],
   "depends": {
-    "fabricloader": ">=0.19",
-    "vulkanmod": ">=0.6.8",
+    "fabricloader": ">=${fabric_loader_version}",
+    "vulkanmod": "${vulkanmod_version}",
     "minecraft": "${minecraft_version}"
   },
   "breaks": {

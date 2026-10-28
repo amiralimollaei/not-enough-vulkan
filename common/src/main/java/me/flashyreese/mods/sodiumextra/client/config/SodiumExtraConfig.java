@@ -14,6 +14,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentUtils;
 import net.minecraft.resources.Identifier;
+import net.minecraft.util.Util;
 import net.minecraft.world.level.Level;
 import net.vulkanmod.config.option.PerformanceImpact;
 
@@ -783,6 +784,16 @@ public class SodiumExtraConfig {
                     .hint(Component.translatable("sodium-extra.option.panini_projection_strength.tooltip"))
                     .bind((value) -> SodiumExtraClientMod.options().extraSettings.paniniProjectionStrength = value, () -> SodiumExtraClientMod.options().extraSettings.paniniProjectionStrength)
                     .defaults(25)
+                    .onSave(SodiumExtraClientMod.options()));
+            g.add(spec.slider(id("panini_projection_quality"))
+                    .span(100, 400, 1)
+                    .format(ValueFormatter.percent())
+                    .enabledWhen(SodiumExtraConfig::isPaniniProjectionOptionEnabled)
+                    .title(Component.translatable("sodium-extra.option.panini_projection_quality"))
+                    .hint(Component.translatable("sodium-extra.option.panini_projection_quality.tooltip"))
+                    .impact(PerformanceImpact.HIGH)
+                    .bind((value) -> SodiumExtraClientMod.options().extraSettings.paniniProjectionQuality = value, () -> SodiumExtraClientMod.options().extraSettings.paniniProjectionQuality)
+                    .defaults(150)
                     .onSave(SodiumExtraClientMod.options()));
         });
 

@@ -26,7 +26,7 @@ side = "CLIENT"
 [[dependencies.not_enough_vulkan]]
 modId = "vulkanmod"
 type = "required"
-versionRange = "[0.6.9,)"
+versionRange = "[${vulkanmod_version}]"
 ordering = "NONE"
 side = "CLIENT"
 
@@ -42,3 +42,6 @@ config = "not-enough-vulkan.mixins.json"
 
 [[accessTransformers]]
 file="accesstransformer.cfg"
+
+[modproperties.sodium_extra]
+"vulkanmod:mod_settings_registry" = "io.github.amiralimollaei.mods.notenoughvulkan.config.impl.NotEnoughVulkanVkModSettingsFactoryImpl"

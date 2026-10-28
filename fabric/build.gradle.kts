@@ -109,12 +109,14 @@ tasks {
     processResources {
         inputs.property("version", project.version)
         inputs.property("minecraft_version", MINECRAFT_VERSION)
+        inputs.property("fabric_loader_version", FABRIC_LOADER_VERSION)
         inputs.property("vulkanmod_version", VULKANMOD_VERSION)
 
         filesMatching("fabric.mod.json") {
             expand(mapOf(
                 "version" to project.version,
                 "minecraft_version" to MINECRAFT_VERSION,
+                "fabric_loader_version" to FABRIC_LOADER_VERSION,
                 "vulkanmod_version" to VULKANMOD_VERSION
             ))
         }

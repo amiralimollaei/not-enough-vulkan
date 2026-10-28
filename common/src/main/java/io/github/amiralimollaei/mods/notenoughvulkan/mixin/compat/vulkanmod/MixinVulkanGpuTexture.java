@@ -1,4 +1,4 @@
-package me.flashyreese.mods.sodiumextra.mixin.panini_projection;
+package io.github.amiralimollaei.mods.notenoughvulkan.mixin.compat.vulkanmod;
 
 import net.minecraft.util.ARGB;
 import net.vulkanmod.render.engine.VkGpuTexture;

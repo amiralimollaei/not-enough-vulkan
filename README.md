@@ -24,15 +24,8 @@ Server owners can authorize Sodium Extra's protected gameplay fog controls with 
 a server resource pack and the [Greenlight](https://modrinth.com/mod/greenlight) client mod. See
 [Server Policies](https://github.com/FlashyReese/sodium-extra/wiki/Server-Policies) for the policy schema and examples.
 
-## Panini projection
-Panini Quality is available in Extras when Panini Projection is enabled. It ranges
-from 100% to 400% in 1% steps and defaults to 150%. The percentage scales both
-world-rendering dimensions: 150% renders 2.25× as many world pixels, increasing
-detail and GPU cost. The hand and interface retain their normal resolution.
-VulkanMod-only compatibility mixins adjust terrain and cloud targets after the
-original main-framebuffer bind, without cancelling it or replacing the main pass.
-Other mods' custom framebuffer bindings are left untouched. Offscreen clears
-retain the fog color so higher quality settings do not leave a black horizon.
+## VulkanMod framebuffer compatibility
+The terrain/cloud target and offscreen clear-color fixes apply independently of sodium-extra settings, this should in theory fix a bunch of issues with some render scaling mods.
 
 ## Building from source
 ### Prerequisites

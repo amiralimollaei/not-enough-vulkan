@@ -58,7 +58,7 @@ public class SodiumExtraClientMod {
                     .addMixinOption("panini_projection", true)
                     .addMixinOption("particle", true)
                     .addMixinOption("prevent_shaders", true)
-                    .addMixinOption("reduce_resolution_on_mac", false) // we don't currently support this feature.
+                    .addMixinOption("reduce_resolution_on_mac", true)
                     .addMixinOption("render", true)
                     .addMixinOption("render.block", true)
                     .addMixinOption("render.block.entity", true)

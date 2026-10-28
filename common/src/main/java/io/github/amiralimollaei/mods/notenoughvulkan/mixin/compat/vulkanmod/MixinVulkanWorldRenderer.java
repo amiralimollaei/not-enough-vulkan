@@ -1,12 +1,9 @@
-package me.flashyreese.mods.sodiumextra.mixin.panini_projection;
+package io.github.amiralimollaei.mods.notenoughvulkan.mixin.compat.vulkanmod;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import com.mojang.blaze3d.pipeline.RenderTarget;
-import net.minecraft.client.Minecraft;
+import io.github.amiralimollaei.mods.notenoughvulkan.compat.vkmod.VulkanWorldTarget;
 import net.vulkanmod.render.chunk.WorldRenderer;
-import net.vulkanmod.render.engine.VkTextureView;
-import net.vulkanmod.vulkan.Renderer;
 import net.vulkanmod.vulkan.pass.MainPass;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -22,13 +19,7 @@ public class MixinVulkanWorldRenderer {
             )
     )
     private void sodiumExtra$bindWorldTarget(MainPass instance, Operation<Void> original) {
-        Minecraft minecraft = Minecraft.getInstance();
-        Renderer renderer = Renderer.getInstance();
-        // leave custom targets alone.
-        if (renderer.getBoundFramebuffer() == renderer.getMainPass().getMainFramebuffer()) {
-            RenderTarget target = minecraft.gameRenderer.mainRenderTarget();
-            ((VkTextureView) target.getColorTextureView()).getFbo(target.getDepthTexture()).bind();
-        } else {
+        if (!VulkanWorldTarget.bindAlternateMainTarget(instance)) {
             original.call(instance);
         }
     }

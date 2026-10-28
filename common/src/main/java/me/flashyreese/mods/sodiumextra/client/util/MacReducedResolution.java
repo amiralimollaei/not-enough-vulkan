@@ -6,21 +6,18 @@ import net.minecraft.util.Util;
 
 public final class MacReducedResolution {
     /*
-     * This is intentionally backend-specific. On macOS, the "reduce resolution"
-     * option cannot be treated as one generic framebuffer rule:
-     *
-     * - OpenGL requests GLFW_COCOA_RETINA_FRAMEBUFFER=false, but NeoForge can
-     *   reuse an early-loading window. Limit rendering to the logical window
-     *   size without halving an already reduced drawable.
-     * - Vulkan/MoltenVK still needs Minecraft's Window framebuffer dimensions to
-     *   be reduced, and its swapchain should be reduced to match. Rendering into a
-     *   reduced texture and scaling it into a full-size swapchain fixed the border
-     *   but caused bad 1% lows on the Mac tester's machine.
+     * Vulkan framebuffer dimensions must agree with the presentation surface:
+     * - Minecraft's Vulkan backend explicitly reduces the swapchain configuration.
+     * - VulkanMod requests a non-Retina Metal layer. GLFW still reports Cocoa
+     *   backing pixels, so reduce Minecraft's framebuffer once to match that
+     *   layer and VulkanMod's swapchain.
+     * Rendering a reduced texture into a full-size swapchain fixed the border
+     * but caused bad 1% lows on the Mac tester's machine.
      */
     private enum Backend {
         UNKNOWN,
-        OPENGL,
-        VULKAN
+        VULKAN,
+        VULKAN_MOD
     }
 
     private static Backend backend = Backend.UNKNOWN;
@@ -36,12 +33,12 @@ public final class MacReducedResolution {
         return Math.max(1, value / 2);
     }
 
-    public static void useOpenGlBackend() {
-        useBackend(Backend.OPENGL);
-    }
-
     public static void useVulkanBackend() {
         useBackend(Backend.VULKAN);
+    }
+
+    public static void useVulkanModBackend() {
+        useBackend(Backend.VULKAN_MOD);
     }
 
     private static void useBackend(Backend selectedBackend) {
@@ -61,11 +58,8 @@ public final class MacReducedResolution {
     }
 
     public static boolean shouldReduceFramebuffer(int framebufferWidth, int framebufferHeight, int windowWidth, int windowHeight) {
-        return isEnabled() && backend != Backend.OPENGL && isHighDpiFramebuffer(framebufferWidth, framebufferHeight, windowWidth, windowHeight);
-    }
-
-    public static boolean shouldUseWindowSizeForFramebuffer() {
-        return isEnabled() && backend == Backend.OPENGL;
+        return isEnabled() && (backend == Backend.VULKAN || backend == Backend.VULKAN_MOD)
+                && isHighDpiFramebuffer(framebufferWidth, framebufferHeight, windowWidth, windowHeight);
     }
 
     public static GpuSurface.Configuration reduceSurfaceConfiguration(GpuSurface.Configuration config) {
@@ -74,10 +68,6 @@ public final class MacReducedResolution {
         }
 
         return new GpuSurface.Configuration(reduce(config.width()), reduce(config.height()), config.presentMode());
-    }
-
-    public static int limitToWindowSize(int framebufferSize, int windowSize) {
-        return Math.max(1, Math.min(framebufferSize, windowSize));
     }
 
     public static boolean shouldScalePresentation(int sourceWidth, int sourceHeight, int targetWidth, int targetHeight) {

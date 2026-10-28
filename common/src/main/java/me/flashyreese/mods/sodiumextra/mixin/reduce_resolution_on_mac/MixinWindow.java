@@ -60,12 +60,7 @@ public class MixinWindow {
                 return;
             }
 
-            if (MacReducedResolution.shouldUseWindowSizeForFramebuffer()) {
-                // NeoForge can reuse a Retina early-loading window. Limit every
-                // update without halving an already reduced OpenGL drawable.
-                this.framebufferWidth = MacReducedResolution.limitToWindowSize(this.framebufferWidth, width);
-                this.framebufferHeight = MacReducedResolution.limitToWindowSize(this.framebufferHeight, height);
-            } else if (MacReducedResolution.shouldReduceFramebuffer(this.framebufferWidth, this.framebufferHeight, width, height)) {
+            if (MacReducedResolution.shouldReduceFramebuffer(this.framebufferWidth, this.framebufferHeight, width, height)) {
                 this.framebufferWidth = MacReducedResolution.reduce(this.framebufferWidth);
                 this.framebufferHeight = MacReducedResolution.reduce(this.framebufferHeight);
             }

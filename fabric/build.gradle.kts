@@ -13,6 +13,7 @@ val FABRIC_LOADER_VERSION = rootProject.extra["FABRIC_LOADER_VERSION"] as String
 val FABRIC_API_VERSION = rootProject.extra["FABRIC_API_VERSION"] as String
 
 val VULKANMOD_VERSION = rootProject.extra["VULKANMOD_VERSION"] as String
+val VULKANMOD_VERSION_FABRIC = rootProject.extra["VULKANMOD_VERSION_FABRIC"] as String
 val BOBBY_VERSION = rootProject.extra["BOBBY_VERSION"] as String
 val GREENLIGHT_VERSION = rootProject.extra["GREENLIGHT_VERSION"] as String
 
@@ -110,14 +111,14 @@ tasks {
         inputs.property("version", project.version)
         inputs.property("minecraft_version", MINECRAFT_VERSION)
         inputs.property("fabric_loader_version", FABRIC_LOADER_VERSION)
-        inputs.property("vulkanmod_version", VULKANMOD_VERSION)
+        inputs.property("vulkanmod_version", VULKANMOD_VERSION_FABRIC)
 
         filesMatching("fabric.mod.json") {
             expand(mapOf(
                 "version" to project.version,
                 "minecraft_version" to MINECRAFT_VERSION,
                 "fabric_loader_version" to FABRIC_LOADER_VERSION,
-                "vulkanmod_version" to VULKANMOD_VERSION
+                "vulkanmod_version" to VULKANMOD_VERSION_FABRIC
             ))
         }
     }

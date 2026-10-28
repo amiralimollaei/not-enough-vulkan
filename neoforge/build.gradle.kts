@@ -11,6 +11,7 @@ plugins {
 val MINECRAFT_VERSION = rootProject.extra["MINECRAFT_VERSION"] as String
 val NEOFORGE_VERSION = rootProject.extra["NEOFORGE_VERSION"] as String
 val VULKANMOD_VERSION = rootProject.extra["VULKANMOD_VERSION"] as String
+val VULKANMOD_VERSION_NEOFORGE = rootProject.extra["VULKANMOD_VERSION_NEOFORGE"] as String
 val GREENLIGHT_VERSION = rootProject.extra["GREENLIGHT_VERSION"] as String
 val BOBBY_VERSION = rootProject.extra["BOBBY_VERSION"] as String
 
@@ -103,13 +104,13 @@ tasks {
     processResources {
         inputs.property("version", project.version)
         inputs.property("minecraft_version", MINECRAFT_VERSION)
-        inputs.property("vulkanmod_version", VULKANMOD_VERSION)
+        inputs.property("vulkanmod_version", VULKANMOD_VERSION_NEOFORGE)
 
         filesMatching("META-INF/neoforge.mods.toml") {
             expand(mapOf(
                 "version" to project.version,
                 "minecraft_version" to MINECRAFT_VERSION,
-                "vulkanmod_version" to VULKANMOD_VERSION
+                "vulkanmod_version" to VULKANMOD_VERSION_NEOFORGE
             ))
         }
     }
